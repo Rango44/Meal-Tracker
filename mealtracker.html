@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<head>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="style.css"/>
+    
+</head>
+
+
+
+
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-green">     
+     <div class="container-fluid">
+          <span class="navbar-brand"> Meal tracker </span>
+     </div>
+</nav>    
+<br>
+
+<div class="pageview container-fluid" id="homePage" style="display:block">
+     <h2>Home</h2>
+
+     </div>
+
+<div class="pageview container-fluid" id="mealsPage" style="display:none">
+     <h2>Meals</h2>
+          <p>recently made here</p>
+          <input type="button" id="createmealbtn" value="Create meal" onclick="togglePages('createmealPage')"/>
+          <input type="button" id="viewallbtn" value="View all"  onclick="togglePages('viewallmealsPage')"/>
+     </div>
+     
+          <!-- create meals -->
+          <div class="pageview container-fluid" id="createmealPage" style="display:none">
+               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('mealsPage')"/>
+               <p>create meal here</p>
+
+               
+               </div>
+
+               <!-- view all meals -->
+          <div class="pageview container-fluid" id="viewallmealsPage" style="display:none">
+               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('mealsPage')"/>
+               <p>view all meals here</p>
+
+               <h3>breakfast</h3>
+               <br>
+               <h3>lunch</h3>
+               <br>
+               <h3>dinner</h3>
+               <br>
+               <h3>baking/dessert</h3>
+               <br>
+
+               </div>
+
+<div class="pageview container-fluid" id="calendarPage" style="display:none">
+     <h2>Calendar</h2>
+     <!-- code for triggering function once date is clicked here-->
+      <p>calendar here</p>
+          <input type="button" id="temp" value="view meals on date page. pressing on a date will trigger this" onclick="togglePages('datePage')"/>
+     </div>
+
+          <!-- view meals on selected date interface -->
+          <div class="pageview container-fluid" id="datePage" style="display:none">
+               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('calendarPage')"/>
+               <p>VIEW meals on selected date here</p>
+               <input type="button" id="temp" value="add meals on to date page" onclick="togglePages('addmealsPage')"/>
+               </div>
+
+          <!-- add meal interface -->
+          <div class="pageview container-fluid" id="addmealsPage" style="display:none">
+               <p>view meals to ADD selected date here. Likely will be the same as view all meals page but with inputs to add meals to the seelcted date</p>
+               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('datePage')"/>
+               </div>
+
+<div class="pageview container-fluid" id="settingsPage" style="display:none">
+
+     <h2>Settings</h2>
+     <label for="darkmodebtn">Dark mode</label>
+     <input type="checkbox" id="darkmodebtn" value="dark mode"/>
+
+     </div>
+     
+     
+     
+     
+
+
+<br>
+<div class="container-fluid" id="navbuttons">
+     <input type ="button" id="homebtn" value="Home" onclick="togglePages('homePage')" />
+     <input type ="button" id="mealpagebtn" value="Meals" onclick="togglePages('mealsPage')" />  
+     <input type ="button" id="calendarbtn" value="Calendar" onclick="togglePages('calendarPage')" />  
+     <input type ="button" id="settingsbtn" value="Settings" onclick="togglePages('settingsPage')" />  
+    
+
+</div>
+    
+</body>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
