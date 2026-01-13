@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" type="text/css" href="https://cdn.curator.io/6.0/curator.embed.css" />
      <link rel="stylesheet" href="style.css"/>
     
 </head>
@@ -17,14 +18,18 @@
 </nav>    
 <br>
 
-<div class="pageview container-fluid" id="homePage" style="display:block">
+<div class="pageview" id="homePage">
      <h2>Home</h2>
-
+          <div class="px-4" id="curator-feed-default-feed-layout"><a href="https://curator.io" target="_blank" class="crt-logo crt-tag">Powered by Curator.io</a></div>
      </div>
 
 <div class="pageview container-fluid" id="mealsPage" style="display:none">
      <h2>Meals</h2>
-          <p>recently made here</p>
+          <p>Recently made</p>
+          <div id="recentlymademeals">
+
+          </div>
+          
           <input type="button" id="createmealbtn" value="Create meal" onclick="togglePages('createmealPage')"/>
           <input type="button" id="viewallbtn" value="View all"  onclick="togglePages('viewallmealsPage')"/>
      </div>
@@ -34,7 +39,45 @@
                <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('mealsPage')"/>
                <p>create meal here</p>
 
+               <form id="mealform">
+
+                    <label for="URL"> Video URL:</label><br>
+                    <input type="text" id="URL"><br><br>
+
+                    <label for="mealname"> Meal name:</label><br>
+                    <input type="text" id="mealname" name="mealname" required><br><br>
+
+                    <label for="instructions"> Instructions + Ingredients:</label><br>
+                    <input type="text" id="instructions" name="instructions"><br><br>
+
+                    <label for="calories"> Calories:</label><br>
+                    <input type="number" id="calories" name="calories"><br><br>
+                    
+                    <label for="cost"> Cost:</label><br> <p>£</p>
+                    <input type="number" id="cost" name="cost"><br><br>
+
+                    <label for="category"> Category:</label> <br>
+                    <select id="category" name="category">
+                         <option value="n/a">-Please select an option-</option>
+                         <option value="breakfast">Breakfast</option>
+                         <option value="lunch">Lunch</option>
+                         <option value="dinner">Dinner</option>
+                         <option value="baking/dessert">Baking/Dessert</option>
+                    </select><br><br>
+
+                    <label for="mealimage">📸</label><br>
+                    <input type="file" id="mealimage" name="mealimage" accept="image/png, image/jpeg, image/heic, image/jpg"> <br><br>
+
+                    <input type="submit" value="Confirm" onclick="Reset">
+                    <input type="reset" value="Reset">
+
                
+
+
+               </form>
+
+
+
                </div>
 
                <!-- view all meals -->
@@ -43,20 +86,34 @@
                <p>view all meals here</p>
 
                <h3>breakfast</h3>
+                    <div id="breakfast">
+
+                    </div>
                <br>
                <h3>lunch</h3>
+               <div id="lunch">
+
+                    </div>
                <br>
                <h3>dinner</h3>
+               <div id="dinner">
+
+                    </div>
                <br>
                <h3>baking/dessert</h3>
+               <div id="baking/dessert">
+
+                    </div>
                <br>
 
                </div>
 
-<div class="pageview container-fluid" id="calendarPage" style="display:none">
+<div class="pageview" id="calendarPage" style="display:none">
      <h2>Calendar</h2>
      <!-- code for triggering function once date is clicked here-->
-      <p>calendar here</p>
+     <p>calendar here</p>
+          <div id='calendar' class=px-4></div>
+
           <input type="button" id="temp" value="view meals on date page. pressing on a date will trigger this" onclick="togglePages('datePage')"/>
      </div>
 
@@ -69,8 +126,8 @@
 
           <!-- add meal interface -->
           <div class="pageview container-fluid" id="addmealsPage" style="display:none">
-               <p>view meals to ADD selected date here. Likely will be the same as view all meals page but with inputs to add meals to the seelcted date</p>
                <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('datePage')"/>
+               <p>view meals to ADD selected date here. Likely will be the same as view all meals page but with inputs to add meals to the seelcted date</p>
                </div>
 
 <div class="pageview container-fluid" id="settingsPage" style="display:none">
@@ -95,10 +152,43 @@
     
 
 </div>
+
+<!--modal html, hidden-->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- curator.io feed, sourced from curator.io account -->
+<script type="text/javascript">
+/* curator-feed-default-feed-layout */
+(function(){
+var i,e,d=document,s="script";i=d.createElement("script");i.async=1;i.charset="UTF-8";
+i.src="https://cdn.curator.io/published/4ed3e93b-3e21-4fe5-b2a0-c3295cbba022.js";
+e=d.getElementsByTagName(s)[0];e.parentNode.insertBefore(i, e);
+})();
+</script>
     
 </body>
 
 <script src="script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <!-- bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script> <!-- localforage (increased storage)-->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>  <!-- calendar-->
 
