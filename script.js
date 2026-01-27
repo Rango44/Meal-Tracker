@@ -86,10 +86,10 @@ function displayMeal() {
             const json = localStorage.getItem(key);
             const mealItem = JSON.parse(json);
 
-            container2.innerHTML += createCard(mealItem);
+            container2.innerHTML += createCard(mealItem, key);
 
             if (mealItem.category === category) {
-            container.innerHTML += createCard(mealItem);
+            container.innerHTML += createCard(mealItem, key);
             
             
             }
@@ -98,7 +98,7 @@ function displayMeal() {
 }
 
 function loadMeals() {
-let container2 = document.getElementById('recentlymademeals');
+
         for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i); //title of the item containing the data
 
@@ -106,43 +106,45 @@ let container2 = document.getElementById('recentlymademeals');
             const json = localStorage.getItem(key);
             const mealItem = JSON.parse(json);
 
+            let container2 = document.getElementById('recentlymademeals');
+
             if (mealItem.category === 'breakfast') {
                 const container=document.getElementById('breakfast');
-                container.innerHTML += createCard(mealItem);
-                container2.innerHTML += createCard(mealItem);
+                container.innerHTML += createCard(mealItem, key);
+                container2.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'lunch') {
                 const container=document.getElementById('lunch');
-                container.innerHTML += createCard(mealItem);
-                container2.innerHTML += createCard(mealItem);
+                container.innerHTML += createCard(mealItem, key);
+                container2.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'dinner') {
                 const container=document.getElementById('dinner');
-                container.innerHTML += createCard(mealItem);
-                container2.innerHTML += createCard(mealItem);
+                container.innerHTML += createCard(mealItem, key);
+                container2.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'baking/dessert') {
                 const container=document.getElementById('baking/dessert');
-                container.innerHTML += createCard(mealItem);
-                container2.innerHTML += createCard(mealItem);
+                container.innerHTML += createCard(mealItem, key);
+                container2.innerHTML += createCard(mealItem, key);
             }
         }
     }
 }
 
-function createCard(mealItem) {
+function createCard(mealItem, key) {
     return `
-            <div class="card" style="width: 18rem;">
+            <div class="card" style="width: 18rem;" id="${key}">
             <div class="card-body">
             <h5 class="card-title">${mealItem.mealname}</h5>
             <p class="card-text">
             ${mealItem.calories} <br>
             ${mealItem.cost}
             </p>
-            <input type="button" class="btn btn-primary" onclick="mealModal(${mealItem.mealname})">Go somewhere</input>
+            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" onclick="mealModal('${key}')">Go somewhere</input> <!-- send the name/unique id of the meal item selected to the modal fucntion -->
             
             </div>
             </div>
@@ -150,7 +152,26 @@ function createCard(mealItem) {
 
 }
 
-function mealModal(mealItem) {
+function mealModal(key) {
+    const json = localStorage.getItem(key); // 
+    const mealItem = JSON.parse(json);
+
+    let container = document.getElementById('modalBody')
+
+    container.innerHTML = `
+            <div class="container-fluid">
+            <div class="row">
+            <div class="col">
+            <p>${mealItem.mealname}</p>
+            <p>${mealItem.calories}</p>
+            <p>${mealItem.cost}</p>
+            <p>${mealItem.instructions}</p>
+            <p>${mealItem.category}</p>
+            <img src="${mealItem.mealimage}">
+            </div>
+            </div>
+            </div>
+    `
 
 }
     
