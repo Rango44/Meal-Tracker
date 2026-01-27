@@ -98,6 +98,18 @@ function displayMeal() {
 }
 
 function loadMeals() {
+let container = document.getElementById('breakfast');
+let container2 = document.getElementById('lunch');
+let container3 = document.getElementById('dinner');
+let container4 = document.getElementById('baking/dessert');
+let container5 = document.getElementById('recentlymademeals');
+
+container .innerHTML='';
+container2.innerHTML='';
+container3.innerHTML='';
+container4.innerHTML='';
+container5.innerHTML='';
+
 
         for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i); //title of the item containing the data
@@ -148,6 +160,7 @@ function createCard(mealItem, key) {
             
             </div>
             </div>
+            <br>
         `
 
 }
@@ -156,23 +169,50 @@ function mealModal(key) {
     const json = localStorage.getItem(key); // 
     const mealItem = JSON.parse(json);
 
-    let container = document.getElementById('modalBody')
+    let title = document.getElementById('modalTitle');
+    let container = document.getElementById('modalBody');
+    let footer = document.getElementById('modal-footer');
+
+    title.innerHTML = `${mealItem.mealname}`
 
     container.innerHTML = `
             <div class="container-fluid">
             <div class="row">
             <div class="col">
-            <p>${mealItem.mealname}</p>
             <p>${mealItem.calories}</p>
             <p>${mealItem.cost}</p>
             <p>${mealItem.instructions}</p>
             <p>${mealItem.category}</p>
-            <img src="${mealItem.mealimage}">
+            ${mealItem.mealImage} <img src="${mealItem.mealimage}">
             </div>
             </div>
             </div>
     `
 
+    footer.innerHTML = `
+        <button type="button" class="btn btn-secondary">Edit</button>
+        <button type="button" class="btn bg-danger" onclick="deleteItem('${key}')">Delete</button>
+    `
+
+}
+
+
+function deleteItem(key) {
+
+    let modal = document.getElementById('mealModal');
+    let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal 
+
+    let text = "Are you sure you want to delete this item?"
+    if (confirm(text) == true) {
+    localStorage.removeItem(key);
+    loadMeals();
+
+    modalInstance.hide() // closes modal
+
+    } else {
+        return;
+    }
+    
 }
     
 
