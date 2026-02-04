@@ -1,5 +1,5 @@
 loadMeals(); // load from local storage
-
+ let mealKey = null;
 
 function save() {
 
@@ -20,6 +20,14 @@ function togglePages(page) {
 
     if (page === 'homePage') {
         
+    }
+
+    if (page === 'mealsPage') {
+        loadMeals(); // load meals, ensures the information is always updated when viewing
+    }
+
+    if (page !== 'createmealPage') {
+        form.reset(); // reset form values after leaving the form 
     }
 
     if (page === 'viewallmealsPage') {
@@ -62,8 +70,17 @@ const form = document.querySelector('form'); //selects the form
         }
 
         const json = JSON.stringify(mealItem);
-        localStorage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
 
+        if (mealKey !== null) { // if we're editing an item
+            localStorage.setItem(mealKey, json); // replaces the json for existing item 
+            document.getElementById('submit').value = 'Confirm'; // changes button text after we're done editing
+            mealKey = null; // resets mealKey
+            togglePages('mealsPage')
+
+        }
+        else {
+            localStorage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
+        }
         console.log(mealItem);
         displayMeal();
         form.reset();
@@ -183,6 +200,7 @@ function mealModal(key) {
             <p>${mealItem.cost}</p>
             <p>${mealItem.instructions}</p>
             <p>${mealItem.category}</p>
+            <p>${mealItem.URL}</p>
             ${mealItem.mealImage} <img src="${mealItem.mealimage}">
             </div>
             </div>
@@ -190,7 +208,7 @@ function mealModal(key) {
     `
 
     footer.innerHTML = `
-        <button type="button" class="btn btn-secondary">Edit</button>
+        <button type="button" class="btn btn-secondary" onclick="editItem('${key}')">Edit</button>
         <button type="button" class="btn bg-danger" onclick="deleteItem('${key}')">Delete</button>
     `
 
@@ -212,6 +230,33 @@ function deleteItem(key) {
     } else {
         return;
     }
+    
+}
+
+function editItem(key) {
+
+
+    mealKey = key
+
+    const json = localStorage.getItem(key);
+    const mealItem = JSON.parse(json);
+    let modal = document.getElementById('mealModal');
+    let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal 
+
+    document.getElementById('submit').value = 'Update'; // changes button text
+    
+    document.getElementById('mealname').value = mealItem.mealname;
+    document.getElementById('calories').value = mealItem.calories;
+    document.getElementById('cost').value = mealItem.cost;
+    document.getElementById('instructions').value = mealItem.instructions;
+    document.getElementById('category').value = mealItem.category;
+    document.getElementById('URL').value = mealItem.URL;
+
+    
+    modalInstance.hide()
+    
+    togglePages('createmealPage')
+
     
 }
     
