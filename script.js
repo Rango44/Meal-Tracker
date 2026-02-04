@@ -9,10 +9,18 @@ function load() {
 
     }
 
-function togglePages(page) {
+function togglePages(page, btn) {
     const pages = document.querySelectorAll('.pageview'); //selects all elements with class 'pageview'
     pages.forEach(page => page.style.display = 'none'); // hides all pages
     document.getElementById(page).style.display = 'block'; // shows the selected page
+
+    const navBtns = document.querySelectorAll('.nav-btn'); //selects all elements with class 'nav-btn'
+    
+    if (btn !== undefined) { // if one of the nav bar buttons are pressed
+        navBtns.forEach(btn => btn.classList.remove('active')); // removes 'active' class from all nav buttons
+        document.getElementById(btn).classList.add('active'); // adds 'active' class to selected nav button
+    }
+    
 
     if (page === 'calendarPage') {
         initCal();
@@ -173,7 +181,7 @@ function createCard(mealItem, key) {
             ${mealItem.calories} <br>
             ${mealItem.cost}
             </p>
-            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" onclick="mealModal('${key}')">Go somewhere</input> <!-- send the name/unique id of the meal item selected to the modal fucntion -->
+            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = View onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
             
             </div>
             </div>
@@ -209,7 +217,7 @@ function mealModal(key) {
 
     footer.innerHTML = `
         <button type="button" class="btn btn-secondary" onclick="editItem('${key}')">Edit</button>
-        <button type="button" class="btn bg-danger" onclick="deleteItem('${key}')">Delete</button>
+        <button type="button" class="btn btn-danger" onclick="deleteItem('${key}')">Delete</button>
     `
 
 }

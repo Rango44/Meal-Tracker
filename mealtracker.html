@@ -3,7 +3,7 @@
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
      <link rel="stylesheet" type="text/css" href="https://cdn.curator.io/6.0/curator.embed.css" />
      <link rel="stylesheet" href="style.css"/>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 
@@ -20,7 +20,7 @@
 
 <div class="pageview" id="homePage">
      <h2>Home</h2>
-          <div class="px-4" id="curator-feed-default-feed-layout"><a href="https://curator.io" target="_blank" class="crt-logo crt-tag">Powered by Curator.io</a></div>
+          <div class="px-2 mb-5" id="curator-feed-default-feed-layout"><a href="https://curator.io" target="_blank" class="crt-logo crt-tag">Powered by Curator.io</a></div>
      </div>
 
 <div class="pageview container-fluid" id="mealsPage" style="display:none">
@@ -30,8 +30,8 @@
 
           </div>
           
-          <input type="button" id="createmealbtn" value="Create meal" onclick="togglePages('createmealPage')"/>
-          <input type="button" id="viewallbtn" value="View all"  onclick="togglePages('viewallmealsPage')"/>
+          <input class="btn btn-primary" type="button" id="createmealbtn" value="Create meal" onclick="togglePages('createmealPage')"/>
+          <input class="btn btn-secondary" type="button" id="viewallbtn" value="View all"  onclick="togglePages('viewallmealsPage')"/>
      </div>
      
           <!-- create meals -->
@@ -68,8 +68,8 @@
                     <label for="mealimage">📸</label><br>
                     <input type="file" id="mealimage" name="mealimage" accept="image/png, image/jpeg, image/heic, image/jpg"> <br><br>
 
-                    <input type="submit" value="Confirm" id="submit"onclick="Reset">
-                    <input type="reset" value="Reset">
+                    <input class ="btn btn-primary" type="submit" value="Confirm" id="submit"onclick="Reset">
+                    <input class="btn btn-secondary" type="reset" value="Reset">
 
                
 
@@ -114,7 +114,7 @@
      <p>calendar here</p>
           <div id='calendar' class=px-4></div>
 
-          <input type="button" id="temp" value="view meals on date page. pressing on a date will trigger this" onclick="togglePages('datePage')"/>
+          <input type="button" id="temp" onclick="togglePages('datePage')"/> <!--"view meals on date page. pressing on a date will trigger this"-->
      </div>
 
           <!-- view meals on selected date interface -->
@@ -144,14 +144,15 @@
 
 
 <br>
-<div class="container-fluid" id="navbuttons">
-     <input type ="button" id="homebtn" value="Home" onclick="togglePages('homePage')" />
-     <input type ="button" id="mealpagebtn" value="Meals" onclick="togglePages('mealsPage')" />  
-     <input type ="button" id="calendarbtn" value="Calendar" onclick="togglePages('calendarPage')" />  
-     <input type ="button" id="settingsbtn" value="Settings" onclick="togglePages('settingsPage')" />  
-    
+<nav class="nav navbar"> 
 
+<div class="container-fluid navbar-footer fixed-bottom bg-info mb-4 px-4 py-1 rounded-pill col-md-6 col-lg-4 col-11" id="navbuttons">
+     <input class ="btn nav-btn btn-lg active" role="button" aria-pressed="true" type ="button" id="homebtn" value="🏠" onclick="togglePages('homePage', 'homebtn')" />
+     <input class ="btn nav-btn btn-lg" role="button" aria-pressed="true" type ="button" id="mealpagebtn" value="🍕" onclick="togglePages('mealsPage', 'mealpagebtn')" />  
+     <input class ="btn nav-btn btn-lg" role="button" aria-pressed="true" type ="button" id="calendarbtn" value="📆" onclick="togglePages('calendarPage', 'calendarbtn')" />  
+     <input class ="btn nav-btn btn-lg" role="button" aria-pressed="true" type ="button" id="settingsbtn" value="⚙" onclick="togglePages('settingsPage', 'settingsbtn')" />  
 </div>
+</nav>
 
 <!--modal html, hidden-->
 <div class="modal fade" id="mealModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
