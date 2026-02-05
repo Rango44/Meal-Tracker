@@ -45,3 +45,16 @@
   --bs-btn-active-color: #fff;
 
 }
+
+.switch-lg {
+  transform: scale(1.5);
+}
+
+#backarrow {
+width: 40px;
+height: auto;
+}
+
+#backbtn {
+ padding: 0;
+}

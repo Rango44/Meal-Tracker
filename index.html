@@ -10,12 +10,12 @@
 
 
 <body>
+   
+<h1 
+     class="container-fluid sticky-top bg-info display-4 border-bottom border-3 border-black"> Meal tracker 
+     <small class="text-muted float-end" style="font-size: 35%"> Demo by Harvey Bosworth</small>
+</h1>
 
-<nav class="navbar navbar-expand-lg bg-body-green">     
-     <div class="container-fluid">
-          <span class="navbar-brand"> Meal tracker </span>
-     </div>
-</nav>    
 <br>
 
 <div class="pageview" id="homePage">
@@ -35,8 +35,10 @@
      </div>
      
           <!-- create meals -->
-          <div class="pageview container-fluid" id="createmealPage" style="display:none">
-               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('mealsPage')"/>
+          <div class="pageview container-fluid pb-5" id="createmealPage" style="display:none">
+               <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('mealsPage')">
+          <img src="source/backarrow.png" id="backarrow">
+          </button>
                <p>create meal here</p>
 
                <form id="mealform">
@@ -70,7 +72,8 @@
 
                     <input class ="btn btn-primary" type="submit" value="Confirm" id="submit"onclick="Reset">
                     <input class="btn btn-secondary" type="reset" value="Reset">
-
+<br>
+<br>
                
 
 
@@ -82,7 +85,9 @@
 
                <!-- view all meals -->
           <div class="pageview container-fluid" id="viewallmealsPage" style="display:none">
-               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('mealsPage')"/>
+               <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('mealsPage')">
+          <img src="source/backarrow.png" id="backarrow">
+          </button>
                <p>view all meals here</p>
 
                <h3>breakfast</h3>
@@ -108,6 +113,7 @@
 
                </div>
 
+               <!-- calendar interface -->
 <div class="pageview" id="calendarPage" style="display:none">
      <h2>Calendar</h2>
      <!-- code for triggering function once date is clicked here-->
@@ -119,22 +125,64 @@
 
           <!-- view meals on selected date interface -->
           <div class="pageview container-fluid" id="datePage" style="display:none">
-               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('calendarPage')"/>
+               <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('calendarPage')">
+          <img src="source/backarrow.png" id="backarrow">
+          </button>
                <p>VIEW meals on selected date here</p>
                <input type="button" id="temp" value="add meals on to date page" onclick="togglePages('addmealsPage')"/>
                </div>
 
           <!-- add meal interface -->
           <div class="pageview container-fluid" id="addmealsPage" style="display:none">
-               <input type="button" id="backbtn" value="Back arrow" onclick="togglePages('datePage')"/>
+               <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('datePage')">
+          <img src="source/backarrow.png" id="backarrow">
+          </button>
                <p>view meals to ADD selected date here. Likely will be the same as view all meals page but with inputs to add meals to the seelcted date</p>
                </div>
 
+               <!-- settings interface -->
 <div class="pageview container-fluid" id="settingsPage" style="display:none">
 
      <h2>Settings</h2>
-     <label for="darkmodebtn">Dark mode</label>
-     <input type="checkbox" id="darkmodebtn" value="dark mode"/>
+
+<div class="container text-center mt-5">
+  <div class="d-flex justify-content-between ">
+
+     <label class="form-check-label" for="darkmodebtn">Dark mode</label>
+     <div class="form-check form-switch">
+      <input class="form-check-input" style="min-width: 100px; min-height: 30px;" type="checkbox" role="switch" id="darkmodebtn" value="dark mode"/>
+     
+     </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center pt-5">
+
+     <p class="me-3 text-start"> Export data for importing on another device</p>
+     
+      <button type="button" class="btn btn-outline-secondary" style="min-width: 100px;">Export</button>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center pt-5">
+
+     <p class="me-3 text-start"> Import data using exported file</p>
+     
+      <button type="button" class="btn btn-outline-secondary" style="min-width: 100px;">Import</button>
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center pt-5">
+
+     <p class="me-3 text-start"> Remove all saved data</p>
+     
+      <button type="button" class="btn btn-outline-danger" style="min-width: 100px;">Reset</button>
+
+</div>
+
+</div>
+
+     
+
 
      </div>
      
