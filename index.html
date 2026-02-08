@@ -12,7 +12,7 @@
 <body>
    
 <h1 
-     class="container-fluid sticky-top bg-info display-4 border-bottom border-3 border-black"> Meal tracker 
+     class="container-fluid sticky-top bg-info display-4 border-bottom border-2 border-black"> Meal tracker 
      <small class="text-muted float-end" style="font-size: 35%"> Demo by Harvey Bosworth</small>
 </h1>
 
@@ -35,43 +35,100 @@
      </div>
      
           <!-- create meals -->
-          <div class="pageview container-fluid pb-5" id="createmealPage" style="display:none">
+          <div class="pageview container-fluid col-12 col-md-9" id="createmealPage" style="display:none">
+
+               <div class=" d-flex text-center mx-auto justify-content-between">
                <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('mealsPage')">
-          <img src="source/backarrow.png" id="backarrow">
-          </button>
-               <p>create meal here</p>
+               <img src="source/backarrow.png" id="backarrow"></button>
+
+               
 
                <form id="mealform">
 
-                    <label for="URL"> Video URL:</label><br>
-                    <input type="text" id="URL" name="URL"><br><br>
+               <div>
+               <input class="btn btn-primary" type="submit" value="Confirm" id="submit" onclick="Reset">
+               <input class="btn btn-secondary" type="reset" value="Reset">
+               </div>
+               </div>
 
-                    <label for="mealname"> Meal name:</label><br>
-                    <input type="text" id="mealname" name="mealname" required><br><br>
+          <div class="container text-center mt-4">
+               <div class="d-flex mx-auto ">
+                    <div class="input-group">
+                    <label class="input-group-text" for="mealname"> Meal <br> name:</label>
+                    <input class="form-control" type="text" id="mealname" name="mealname" required>   
+                    </div>
+               </div>
+          </div>     
 
-                    <label for="instructions"> Instructions + Ingredients:</label><br>
-                    <input type="text" id="instructions" name="instructions"><br><br>
-
-                    <label for="calories"> Calories:</label><br>
-                    <input type="number" id="calories" name="calories"><br><br>
+          <div class="container text-center mt-4">
+               <div class="d-flex mx-auto ">
+                    <div class="input-group">
+                    <label class="input-group-text"for="URL"> Video URL:</label>
+                    <input class="form-control" type="text" id="URL" name="URL">
+                    </div>
+               </div>
+          </div>
                     
-                    <label for="cost"> Cost:</label><br> <p>£</p>
-                    <input type="number" id="cost" name="cost"><br><br>
+          <div class=" container text-start mt-4">
+               <div class="mx-auto  ">
+                    <label> Instructions + Ingredients:</label>
+                    
+                    <textarea class="form-control" id="instructions" name="instructions" style="height: 150px; line-height: 2;"></textarea>
+                     
+                        
+                    
+               </div>
+          </div>
 
-                    <label for="category"> Category:</label> <br>
-                    <select id="category" name="category">
-                         <option value="n/a">-Please select an option-</option>
+          <div class="container text-center mt-5">
+               <div class="d-flex mx-auto  justify-content-center align-items-center ">
+                    
+               <div class="input-group">
+                    <label class="input-group-text"for="calories"> Calories:</label>
+                    <input class="form-control" type="number" id="calories" name="calories">
+               </div>           
+
+               <div class="input-group">
+                    <label class="ms-2 input-group-text" for="cost"> Cost:</label> 
+                    <p class=" mb-0 input-group-text">£</p> <input class="form-control" type="number" id="cost" name="cost">
+               </div>
+                    
+               </div>
+          </div>
+
+           <div class="container text-center mt-4">
+               <div class="d-flex mx-auto  justify-content-center align-items-center ">
+                    
+               <div class="input-group">
+
+                    <label class="input-group-text" for="category"> Category:</label>
+                    <select class="form-select me-4 rounded-end" id="category" name="category" value="Select">
+                         <option value="n/a">Select</option>
                          <option value="breakfast">Breakfast</option>
                          <option value="lunch">Lunch</option>
                          <option value="dinner">Dinner</option>
                          <option value="baking/dessert">Baking/Dessert</option>
-                    </select><br><br>
+                    </select>
+               
+                   
+                    <label class= "pt-2 btn btn-outline-primary rounded" for="mealimage">📸</label>
+                    <input type="file" id="mealimage" name="mealimage" style="display:none;" accept="image/png, image/jpeg, image/heic, image/jpg"> <br><br>
 
-                    <label for="mealimage">📸</label><br>
-                    <input type="file" id="mealimage" name="mealimage" accept="image/png, image/jpeg, image/heic, image/jpg"> <br><br>
+               </div>
+                    
+               </div>
+          </div>
+                    
 
-                    <input class ="btn btn-primary" type="submit" value="Confirm" id="submit"onclick="Reset">
-                    <input class="btn btn-secondary" type="reset" value="Reset">
+                   
+
+                    
+                    
+                    
+
+                    
+
+                    
 <br>
 <br>
                
@@ -148,7 +205,7 @@
 <div class="container text-center mt-5">
   <div class="d-flex justify-content-between ">
 
-     <label class="form-check-label" for="darkmodebtn">Dark mode</label>
+     <label class="form-check-label my-auto" for="darkmodebtn">Dark mode</label>
      <div class="form-check form-switch">
       <input class="form-check-input" style="min-width: 100px; min-height: 30px;" type="checkbox" role="switch" id="darkmodebtn" value="dark mode"/>
      
@@ -157,7 +214,7 @@
 
 <div class="d-flex justify-content-between align-items-center pt-5">
 
-     <p class="me-3 text-start"> Export data for importing on another device</p>
+     <p class="me-3 text-start my-auto"> Export data for importing on another device</p>
      
       <button type="button" class="btn btn-outline-secondary" style="min-width: 100px;">Export</button>
 
@@ -165,7 +222,7 @@
 
 <div class="d-flex justify-content-between align-items-center pt-5">
 
-     <p class="me-3 text-start"> Import data using exported file</p>
+     <p class="me-3 text-start my-auto"> Import data using exported file</p>
      
       <button type="button" class="btn btn-outline-secondary" style="min-width: 100px;">Import</button>
 
@@ -173,7 +230,7 @@
 
 <div class="d-flex justify-content-between align-items-center pt-5">
 
-     <p class="me-3 text-start"> Remove all saved data</p>
+     <p class="me-3 text-start my-auto"> Remove all saved data</p>
      
       <button type="button" class="btn btn-outline-danger" style="min-width: 100px;">Reset</button>
 

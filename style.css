@@ -25,6 +25,18 @@
   --bs-btn-hover-border-color: #000000;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #01cc1c;
+  height: 42px;
+}
+
+.btn-outline-primary {
+  --bs-btn-active-bg: #01cc1c;
+  --bs-btn-border-color: #01cc1c;
+  --bs-btn-hover-color: #000000;
+  --bs-btn-hover-border-color: #000000;
+  --bs-btn-hover-bg: #01cc1c;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-border-color: #ffffff;
+  
 }
 
 .btn-secondary {
@@ -34,6 +46,8 @@
   --bs-btn-hover-bg: #edf5f0;
   --bs-btn-hover-border-color: #000000;
   --bs-btn-active-color: #fff;
+  --bs-btn-active-border-color: #ffffff;
+  height: 42px;
 }
 
 .btn-danger {
@@ -58,3 +72,4 @@ height: auto;
 #backbtn {
  padding: 0;
 }
+
