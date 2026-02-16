@@ -18,20 +18,40 @@
 
 <br>
 
-<div class="pageview" id="homePage">
+<div class="pageview container-fluid" id="homePage">
      <h2>Home</h2>
           <div class="px-2 mb-5" id="curator-feed-default-feed-layout"><a href="https://curator.io" target="_blank" class="crt-logo crt-tag">Powered by Curator.io</a></div>
      </div>
 
 <div class="pageview container-fluid" id="mealsPage" style="display:none">
-     <h2>Meals</h2>
-          <p>Recently made</p>
-          <div id="recentlymademeals">
 
-          </div>
+     <div class="d-flex text-center mx-auto justify-content-between col-12 col-md-8">
+     <h2>Meals</h2>
+     
           
+
+     
+
+     <div>
           <input class="btn btn-primary" type="button" id="createmealbtn" value="Create meal" onclick="togglePages('createmealPage')"/>
           <input class="btn btn-secondary" type="button" id="viewallbtn" value="View all"  onclick="togglePages('viewallmealsPage')"/>
+
+     </div>
+     
+     </div>
+     <p class="text-muted d-flex text-center mx-auto justify-content-between col-12 col-md-8">Recently made</p>
+
+          <div class= "mx-auto d-flex flex-wrap justify-content-center col-12 col-md-8" id="recentlymademeals">
+
+          </div>
+          <div> <!--SO NAVBAR DOESN'T OOBSTRUCT CARDS WHEN FULLY SCROLLED-->
+               <br>
+               <br>
+               <br>
+               
+          </div>
+          
+          
      </div>
      
           <!-- create meals -->
@@ -45,6 +65,8 @@
                <div class=" d-flex text-center mx-auto justify-content-between">
                <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('mealsPage')">
                <img src="source/backarrow.png" id="backarrow"></button>
+
+               <h2 class="pt-1">Create</h2>
 
 
                <div>
@@ -75,7 +97,7 @@
                <div class="mx-auto  ">
                     <label> Instructions + Ingredients:</label>
                     
-                    <textarea class="form-control" id="instructions" name="instructions" style="height: 150px; line-height: 2;"></textarea>
+                    <textarea class="form-control" id="instructions" name="instructions" style="height: 150px; line-height: 1.4;"></textarea>
                      
                         
                     
@@ -83,16 +105,17 @@
           </div>
 
           <div class="container text-center mt-5">
-               <div class="d-flex mx-auto  justify-content-center align-items-center ">
+               <div class="d-flex mx-auto align-items-center ">
                     
-               <div class="input-group">
+               <div class="input-group ">
                     <label class="input-group-text"for="calories"> Calories:</label>
-                    <input class="form-control" type="number" id="calories" name="calories">
+                    <input class="form-control me-3 " type="number" id="calories" name="calories">
                </div>           
 
-               <div class="input-group">
-                    <label class="ms-2 input-group-text" for="cost"> Cost:</label> 
-                    <p class=" mb-0 input-group-text">£</p> <input class="form-control" type="number" id="cost" name="cost">
+               <div class="input-group ">
+                    <label class="input-group-text" for="cost"> Cost:</label> 
+                    <p class=" mb-0 input-group-text">£</p> 
+                    <input class="form-control" type="number" step="0.01" id="cost" name="cost">
                </div>
                     
                </div>
@@ -120,21 +143,9 @@
                     
                </div>
           </div>
-                    
-
-                   
-
-                    
-                    
-                    
-
-                    
-
-                    
-<br>
-<br>
                
-
+<br>
+<br>
 
                </form>
 
@@ -144,31 +155,48 @@
 
                <!-- view all meals -->
           <div class="pageview container-fluid" id="viewallmealsPage" style="display:none">
+               <div class="d-flex text-center mx-auto col-12 col-md-8">
                <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('mealsPage')">
           <img src="source/backarrow.png" id="backarrow">
           </button>
-               <p>view all meals here</p>
-
+          <h2 class="pt-1 ps-3 pb-4">View all</h2>
+          </div>
+          
+          <div class="mx-auto col-12 col-md-6 ">
                <h3>breakfast</h3>
-                    <div id="breakfast">
+                    <div id="breakfast" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
 
-                    </div>
+               </div>
+          </div>
                <br>
+
+          <div class="mx-auto col-12 col-md-6">
                <h3>lunch</h3>
-               <div id="lunch">
+               <div id="lunch" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
 
                     </div>
+                    </div>
                <br>
+
+          <div class="mx-auto col-12 col-md-6">    
                <h3>dinner</h3>
-               <div id="dinner">
+               <div id="dinner" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
 
                     </div>
+                    </div>
                <br>
+
+          <div class="mx-auto col-12 col-md-6">
                <h3>baking/dessert</h3>
-               <div id="baking/dessert">
+               <div id="baking/dessert" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto"">
 
                     </div>
+                    </div>
                <br>
+               <br>
+               <br>
+
+               
 
                </div>
 
@@ -200,7 +228,7 @@
                </div>
 
                <!-- settings interface -->
-<div class="pageview container-fluid" id="settingsPage" style="display:none">
+<div class="pageview container-fluid col-12 col-md-8" id="settingsPage" style="display:none">
 
      <h2>Settings</h2>
 
@@ -265,8 +293,8 @@
 <div class="modal fade" id="mealModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalTitle"></h5>
+      <div class="modal-header" >
+        <h5 class="modal-title text-wrap text-break" id="modalTitle"></h5>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

@@ -173,19 +173,27 @@ container5.innerHTML='';
 }
 
 function createCard(mealItem, key) {
+
+
     return `
-            <div class="card" style="width: 18rem;" id="${key}">
+
+    
+
+            <div class="card mb-3 me-3" style= "width: 280px; height: 180px;" id="${key}">
             <div class="card-body">
             <h5 class="card-title">${mealItem.mealname}</h5>
             <p class="card-text">
-            ${mealItem.calories} <br>
-            ${mealItem.cost}
+            ${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
+            ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing -->
+            <div>
+            
+            </div>
             </p>
             <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = View onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
             
             </div>
             </div>
-            <br>
+            
         `
 
 }
@@ -204,11 +212,11 @@ function mealModal(key) {
             <div class="container-fluid">
             <div class="row">
             <div class="col">
-            <p>${mealItem.calories}</p>
-            <p>${mealItem.cost}</p>
-            <p>${mealItem.instructions}</p>
-            <p>${mealItem.category}</p>
-            <p>${mealItem.URL}</p>
+            <p>${mealItem.cost ? '£' + mealItem.cost : ''} </p> <!--if cost exists, display with £, else display ntohing -->
+            <p>${mealItem.calories ? mealItem.calories + ' calories' : ''}  </p> <!--if calories exists, end with calories, else display ntohing -->
+            <p class="text-break"style="white-space: pre-wrap; text-wrap: wrap">${mealItem.instructions}</p> <!-- linebreaks included-->
+            <p>Category: ${mealItem.category}</p>
+            <p>URL: ${mealItem.URL}</p>
             ${mealItem.mealImage} <img src="${mealItem.mealimage}">
             </div>
             </div>
