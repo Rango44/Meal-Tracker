@@ -104,10 +104,20 @@ function displayMeal() {
     
      container.innerHTML = ''; //clears the container ready for new data when loop runs multiple times
      container2.innerHTML = ''; //clears the container ready for new data when loop runs multiple times
+
+    const keys = Object.keys(localStorage) //gets all keys from local storage
+    .filter(key => key.startsWith('mealItem_')) //only picks up data that starts with 'mealItem_'
+    const sortedkeys = keys.sort((a, b) => { //sorts using 2 parameters
+        const timeA = parseInt(a.split("_")[1]); // select date part of key
+        const timeB = parseInt(b.split("_")[1]); // select date part of key
+        return timeB - timeA; // newest first order
+        
+        });
     
-    for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i); //title of the item containing the data
-        if (key.startsWith('mealItem_')) {
+    
+        
+        
+        sortedkeys.forEach(key => {
             const json = localStorage.getItem(key);
             const mealItem = JSON.parse(json);
 
@@ -115,12 +125,15 @@ function displayMeal() {
 
             if (mealItem.category === category) {
             container.innerHTML += createCard(mealItem, key);
-            
-            
             }
-        }
+        });
+           
+            
     }
-}
+    
+        
+    
+
 
 function loadMeals() {
 let container = document.getElementById('breakfast');
@@ -136,10 +149,19 @@ container4.innerHTML='';
 container5.innerHTML='';
 
 
-        for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i); //title of the item containing the data
-
-        if (key.startsWith('mealItem_')) { // only pick up data that starts with 'mealItem_'
+        const keys = Object.keys(localStorage) //gets all keys from local storage
+    .filter(key => key.startsWith('mealItem_')) //only picks up data that starts with 'mealItem_'
+    const sortedkeys = keys.sort((a, b) => { //sorts using 2 parameters
+        const timeA = parseInt(a.split("_")[1]); // select date part of key
+        const timeB = parseInt(b.split("_")[1]); // select date part of key
+        return timeB - timeA; //newest order first
+        
+        });
+    
+    
+        
+        
+        sortedkeys.forEach(key => {
             const json = localStorage.getItem(key);
             const mealItem = JSON.parse(json);
 
@@ -168,9 +190,11 @@ container5.innerHTML='';
                 container.innerHTML += createCard(mealItem, key);
                 container2.innerHTML += createCard(mealItem, key);
             }
-        }
+        });
+        
     }
-}
+    
+
 
 function createCard(mealItem, key) {
 
@@ -216,7 +240,7 @@ function mealModal(key) {
             <p>${mealItem.calories ? mealItem.calories + ' calories' : ''}  </p> <!--if calories exists, end with calories, else display ntohing -->
             <p class="text-break"style="white-space: pre-wrap; text-wrap: wrap">${mealItem.instructions}</p> <!-- linebreaks included-->
             <p>Category: ${mealItem.category}</p>
-            <p>URL: ${mealItem.URL}</p>
+            <p>${mealItem.URL ? 'URL: ' + mealItem.URL : ''} </p> <!--if URL exists, display with URL, else display ntohing --></p>
             ${mealItem.mealImage} <img src="${mealItem.mealimage}">
             </div>
             </div>
