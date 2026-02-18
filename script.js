@@ -65,6 +65,9 @@ function initCal(){
 
       
 
+let imageURL = '';
+      
+//Below runs when form is submitted, gets inputs
 const form = document.querySelector('form'); //selects the form
     form.addEventListener('submit', (e) => { //runs when form is submitted
         e.preventDefault(); //stop screen from refreshing
@@ -77,6 +80,12 @@ const form = document.querySelector('form'); //selects the form
             return;
         }
 
+        if (imageURL !== '') {
+
+            mealItem.mealimage = imageURL;
+
+        }
+
         const json = JSON.stringify(mealItem);
 
         if (mealKey !== null) { // if we're editing an item
@@ -86,15 +95,35 @@ const form = document.querySelector('form'); //selects the form
             togglePages('mealsPage')
 
         }
+
+        
+
         else {
             localStorage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
         }
+
+        imageURL=''; // needed to avoid image being saved multiple times
         console.log(mealItem);
         displayMeal();
         form.reset();
         
 
         });
+
+document.querySelector("#mealimage").addEventListener("change", function () { // image processing, runs when image is uplaoded
+
+            const fr = new FileReader();
+
+            
+            fr.addEventListener("load", () => {
+                console.log(fr.result);
+                imageURL = fr.result;
+
+});
+                fr.readAsDataURL(this.files[0]);
+            
+        });
+        
 
 function displayMeal() {
     let category = document.getElementById('category').value;
@@ -132,7 +161,7 @@ function displayMeal() {
     }
     
         
-    
+ 
 
 
 function loadMeals() {
@@ -241,7 +270,11 @@ function mealModal(key) {
             <p class="text-break"style="white-space: pre-wrap; text-wrap: wrap">${mealItem.instructions}</p> <!-- linebreaks included-->
             <p>Category: ${mealItem.category}</p>
             <p>${mealItem.URL ? 'URL: ' + mealItem.URL : ''} </p> <!--if URL exists, display with URL, else display ntohing --></p>
-            ${mealItem.mealImage} <img src="${mealItem.mealimage}">
+            <br>
+            <br>
+           <div class="img-modal-container">
+            <img class="img-modal"src="${mealItem.mealimage}">
+            </div>
             </div>
             </div>
             </div>
