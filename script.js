@@ -36,6 +36,9 @@ function togglePages(page, btn) {
 
     if (page !== 'createmealPage') {
         form.reset(); // reset form values after leaving the form 
+        document.getElementById('submit').value = 'Confirm'; //ensure button is confirm after leaving editing page
+        document.getElementById('preview').src = ''; //ensure preview image is cleared after leaving page
+        document.getElementById("preview").style.display = 'none'; //no preview image box
     }
 
     if (page === 'viewallmealsPage') {
@@ -83,26 +86,37 @@ const form = document.querySelector('form'); //selects the form
         if (imageURL !== '') {
 
             mealItem.mealimage = imageURL;
-
+        }
+        else {
+            delete mealItem.mealimage // clear empty object if no iamge is uplaoded so we can verify if there actually is an image or not
         }
 
         const json = JSON.stringify(mealItem);
 
         if (mealKey !== null) { // if we're editing an item
+            try {
             localStorage.setItem(mealKey, json); // replaces the json for existing item 
             document.getElementById('submit').value = 'Confirm'; // changes button text after we're done editing
             mealKey = null; // resets mealKey
             togglePages('mealsPage')
+            } catch (error) {
+                window.alert(error);
+            }
 
         }
 
         
 
         else {
+            try {
             localStorage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
+            } catch (error) {
+                window.alert(error);
+            }
         }
 
         imageURL=''; // needed to avoid image being saved multiple times
+        
         console.log(mealItem);
         displayMeal();
         form.reset();
@@ -113,17 +127,25 @@ const form = document.querySelector('form'); //selects the form
 document.querySelector("#mealimage").addEventListener("change", function () { // image processing, runs when image is uplaoded
 
             const fr = new FileReader();
-
             
             fr.addEventListener("load", () => {
                 console.log(fr.result);
                 imageURL = fr.result;
+                document.getElementById("preview").src = fr.result;
+                document.getElementById("preview").style.display = 'block';
 
 });
                 fr.readAsDataURL(this.files[0]);
             
         });
         
+
+function resetForm() {
+    form.reset(); // reset form values after leaving the form 
+        document.getElementById('submit').value = 'Confirm'; // wont be 'updating' anything, just confirm
+        document.getElementById('preview').src = ''; //preview image is cleared
+        document.getElementById('preview').style.display = 'none';
+}
 
 function displayMeal() {
     let category = document.getElementById('category').value;
@@ -230,26 +252,35 @@ function createCard(mealItem, key) {
 
     return `
 
+  <div class="card mb-3 me-3" style="min-width: 340px; max-width: 340px; min-height: 180px; max-height: 180px">
+  <div class="row g-0 h-100">
     
-
-            <div class="card mb-3 me-3" style= "width: 280px; height: 180px;" id="${key}">
-            <div class="card-body">
-            <h5 class="card-title">${mealItem.mealname}</h5>
-            <p class="card-text">
-            ${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
-            ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing -->
-            <div>
-            
-            </div>
-            </p>
+    <div class="col-7 h-100">
+      <div class="card-body justify">
+        <h5 class="card-title text-truncate">${mealItem.mealname}</h5>
+        <p class="card-text">${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
+            ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing --></p>
+        
             <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = View onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
             
-            </div>
-            </div>
+      </div>
+    </div>
+
+      <div class="col-5 border rounded-end h-100 ">
+      ${mealItem.mealimage ? '<img class="img-card border border-1 rounded-end" src="' + mealItem.mealimage + '">' : '<img class="h-75 mt-4" src="source/noimage.png">' }
+    </div>
+
+    
+  </div>
+</div>
+
+            
             
         `
 
 }
+
+
 
 function mealModal(key) {
     const json = localStorage.getItem(key); // 
@@ -270,10 +301,10 @@ function mealModal(key) {
             <p class="text-break"style="white-space: pre-wrap; text-wrap: wrap">${mealItem.instructions}</p> <!-- linebreaks included-->
             <p>Category: ${mealItem.category}</p>
             <p>${mealItem.URL ? 'URL: ' + mealItem.URL : ''} </p> <!--if URL exists, display with URL, else display ntohing --></p>
-            <br>
-            <br>
-           <div class="img-modal-container">
-            <img class="img-modal"src="${mealItem.mealimage}">
+            
+            
+           <div class="pt-4 d-flex mx-auto justify-content-center align-items-center col-12">
+            ${mealItem.mealimage ? '<img class="img-modal" src="' + mealItem.mealimage + '">' : '' }
             </div>
             </div>
             </div>
@@ -324,11 +355,24 @@ function editItem(key) {
     document.getElementById('instructions').value = mealItem.instructions;
     document.getElementById('category').value = mealItem.category;
     document.getElementById('URL').value = mealItem.URL;
+    
+    const preview = document.getElementById('preview');
 
+    if (mealItem.mealimage) {
+        preview.src = mealItem.mealimage
+        preview.style.display = 'block';
+        imageURL = mealItem.mealimage // save existing iamge to varaible so it stays on the card
+
+    } else {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+    
     
     modalInstance.hide()
     
     togglePages('createmealPage')
+    
 
     
 }

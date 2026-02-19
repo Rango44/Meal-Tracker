@@ -71,7 +71,7 @@
 
                <div>
                <input class="btn btn-primary" type="submit" value="Confirm" id="submit" onclick="Reset">
-               <input class="btn btn-secondary" type="reset" value="Reset">
+               <input class="btn btn-secondary" type="reset" value="Reset" onclick="resetForm()">
                </div>
                </div>
 
@@ -137,15 +137,17 @@
                
                    
                     <label class= "pt-2 btn btn-outline-primary rounded" for="mealimage">📸</label>
-                    <input type="file" id="mealimage" name="mealimage" style="display:none;" accept="image/png, image/jpeg, image/heic, image/jpg"> <br><br>
-
+                    <input type="file" id="mealimage" name="mealimage" style="display:none;" accept="image/png, image/jpeg, image/heic, image/jpg"><br>
+               </div>   
                </div>
-                    
-               </div>
+                    <div class="pt-4 d-flex mx-auto justify-content-center align-items-center col-12 col-md-4">
+                         <img style="display:none;" class="img-preview" id="preview" src="" >
+                    </div>
+                    <br>
+                    <br>
           </div>
                
-<br>
-<br>
+
 
                </form>
 
@@ -164,7 +166,7 @@
           
           <div class="mx-auto col-12 col-md-6 ">
                <h3>breakfast</h3>
-                    <div id="breakfast" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
+                    <div id="breakfast" style="height: 400px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
 
                </div>
           </div>
@@ -172,7 +174,7 @@
 
           <div class="mx-auto col-12 col-md-6">
                <h3>lunch</h3>
-               <div id="lunch" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
+               <div id="lunch" style="height: 400px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
 
                     </div>
                     </div>
@@ -180,7 +182,7 @@
 
           <div class="mx-auto col-12 col-md-6">    
                <h3>dinner</h3>
-               <div id="dinner" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
+               <div id="dinner" style="height: 400px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto">
 
                     </div>
                     </div>
@@ -188,7 +190,7 @@
 
           <div class="mx-auto col-12 col-md-6">
                <h3>baking/dessert</h3>
-               <div id="baking/dessert" style="max-height: 450px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto"">
+               <div id="baking/dessert" style="height: 400px" class="d-flex overflow-auto overflow-y-hidden flex-wrap flex-column align-content-start mx-auto"">
 
                     </div>
                     </div>
