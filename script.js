@@ -72,7 +72,7 @@ let imageURL = '';
       
 //Below runs when form is submitted, gets inputs
 const form = document.querySelector('form'); //selects the form
-    form.addEventListener('submit', (e) => { //runs when form is submitted
+    form.addEventListener('submit', async (e) => { //runs when form is submitted
         e.preventDefault(); //stop screen from refreshing
 
         const mealData = new FormData(form);
@@ -95,7 +95,7 @@ const form = document.querySelector('form'); //selects the form
 
         if (mealKey !== null) { // if we're editing an item
             try {
-            localStorage.setItem(mealKey, json); // replaces the json for existing item 
+            await localforage.setItem(mealKey, json); // replaces the json for existing item 
             document.getElementById('submit').value = 'Confirm'; // changes button text after we're done editing
             mealKey = null; // resets mealKey
             togglePages('mealsPage')
@@ -109,7 +109,7 @@ const form = document.querySelector('form'); //selects the form
 
         else {
             try {
-            localStorage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
+            await localforage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
             } catch (error) {
                 window.alert(error);
             }
@@ -145,9 +145,22 @@ function resetForm() {
         document.getElementById('submit').value = 'Confirm'; // wont be 'updating' anything, just confirm
         document.getElementById('preview').src = ''; //preview image is cleared
         document.getElementById('preview').style.display = 'none';
+        imageURL=''
 }
 
-function displayMeal() {
+function removeImg() {
+    document.getElementById('preview').src = ''; //preview image is cleared
+    document.getElementById('preview').style.display = 'none';
+    
+}
+
+function deleteImg(){
+    document.getElementById('preview').src = ''; //preview image is cleared
+    document.getElementById('preview').style.display = 'none';
+    imageURL=''
+}
+
+async function displayMeal() {
     let category = document.getElementById('category').value;
 
     let container = document.getElementById(category);
@@ -156,9 +169,9 @@ function displayMeal() {
      container.innerHTML = ''; //clears the container ready for new data when loop runs multiple times
      container2.innerHTML = ''; //clears the container ready for new data when loop runs multiple times
 
-    const keys = Object.keys(localStorage) //gets all keys from local storage
-    .filter(key => key.startsWith('mealItem_')) //only picks up data that starts with 'mealItem_'
-    const sortedkeys = keys.sort((a, b) => { //sorts using 2 parameters
+    const keys = (await localforage.keys()) //gets all keys from local storage
+    .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_' avoids sorting settings data
+    const sortedkeys = keys.sort((a, b) => { //sorts using 2 parameters, a and b is the comparrison between 2keys
         const timeA = parseInt(a.split("_")[1]); // select date part of key
         const timeB = parseInt(b.split("_")[1]); // select date part of key
         return timeB - timeA; // newest first order
@@ -168,8 +181,10 @@ function displayMeal() {
     
         
         
-        sortedkeys.forEach(key => {
-            const json = localStorage.getItem(key);
+       // sortedkeys.forEach(key => {    // way to get data from local storage (olddddddddd)
+
+       for (const key of sortedkeys) {
+            const json = await localforage.getItem(key);
             const mealItem = JSON.parse(json);
 
             container2.innerHTML += createCard(mealItem, key);
@@ -177,7 +192,7 @@ function displayMeal() {
             if (mealItem.category === category) {
             container.innerHTML += createCard(mealItem, key);
             }
-        });
+        };  
            
             
     }
@@ -186,7 +201,7 @@ function displayMeal() {
  
 
 
-function loadMeals() {
+async function loadMeals() {
 let container = document.getElementById('breakfast');
 let container2 = document.getElementById('lunch');
 let container3 = document.getElementById('dinner');
@@ -200,7 +215,7 @@ container4.innerHTML='';
 container5.innerHTML='';
 
 
-        const keys = Object.keys(localStorage) //gets all keys from local storage
+        const keys = (await localforage.keys()) //gets all keys from local storage
     .filter(key => key.startsWith('mealItem_')) //only picks up data that starts with 'mealItem_'
     const sortedkeys = keys.sort((a, b) => { //sorts using 2 parameters
         const timeA = parseInt(a.split("_")[1]); // select date part of key
@@ -212,8 +227,10 @@ container5.innerHTML='';
     
         
         
-        sortedkeys.forEach(key => {
-            const json = localStorage.getItem(key);
+// sortedkeys.forEach(key => {    // way to get data from local storage (olddddddddd)
+
+    for (const key of sortedkeys) {
+            const json = await localforage.getItem(key);
             const mealItem = JSON.parse(json);
 
             let container2 = document.getElementById('recentlymademeals');
@@ -241,7 +258,7 @@ container5.innerHTML='';
                 container.innerHTML += createCard(mealItem, key);
                 container2.innerHTML += createCard(mealItem, key);
             }
-        });
+        };
         
     }
     
@@ -252,12 +269,12 @@ function createCard(mealItem, key) {
 
     return `
 
-  <div class="card mb-3 me-3" style="min-width: 340px; max-width: 340px; min-height: 180px; max-height: 180px">
+  <div class="card mb-3 me-3" style="min-width: 339px; max-width: 339px; min-height: 180px; max-height: 180px">
   <div class="row g-0 h-100">
     
     <div class="col-7 h-100">
       <div class="card-body justify">
-        <h5 class="card-title text-truncate">${mealItem.mealname}</h5>
+        <h5 class="card-title text-truncate fs-4">${mealItem.mealname}</h5>
         <p class="card-text">${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
             ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing --></p>
         
@@ -267,7 +284,7 @@ function createCard(mealItem, key) {
     </div>
 
       <div class="col-5 border rounded-end h-100 ">
-      ${mealItem.mealimage ? '<img class="img-card border border-1 rounded-end" src="' + mealItem.mealimage + '">' : '<img class="h-75 mt-4" src="source/noimage.png">' }
+      ${mealItem.mealimage ? '<img class="img-card border border-1 rounded-end" src="' + mealItem.mealimage + '">' : '<img class="h-75 mt-4 ps-1 img-card rounded-end" src="source/noimage.png">' }
     </div>
 
     
@@ -282,8 +299,8 @@ function createCard(mealItem, key) {
 
 
 
-function mealModal(key) {
-    const json = localStorage.getItem(key); // 
+async function mealModal(key) {
+    const json = await localforage.getItem(key); // 
     const mealItem = JSON.parse(json);
 
     let title = document.getElementById('modalTitle');
@@ -304,7 +321,7 @@ function mealModal(key) {
             
             
            <div class="pt-4 d-flex mx-auto justify-content-center align-items-center col-12">
-            ${mealItem.mealimage ? '<img class="img-modal" src="' + mealItem.mealimage + '">' : '' }
+            ${mealItem.mealimage ? '<img class="img-modal border border-5 rounded" src="' + mealItem.mealimage + '">' : '' }
             </div>
             </div>
             </div>
@@ -326,7 +343,7 @@ function deleteItem(key) {
 
     let text = "Are you sure you want to delete this item?"
     if (confirm(text) == true) {
-    localStorage.removeItem(key);
+    localforage.removeItem(key);
     loadMeals();
 
     modalInstance.hide() // closes modal
@@ -337,12 +354,12 @@ function deleteItem(key) {
     
 }
 
-function editItem(key) {
+async function editItem(key) {
 
 
     mealKey = key
 
-    const json = localStorage.getItem(key);
+    const json = await localforage.getItem(key);
     const mealItem = JSON.parse(json);
     let modal = document.getElementById('mealModal');
     let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal 

@@ -70,7 +70,7 @@
 
 
                <div>
-               <input class="btn btn-primary" type="submit" value="Confirm" id="submit" onclick="Reset">
+               <input class="btn btn-primary" type="submit" value="Confirm" id="submit" onclick="removeImg()">
                <input class="btn btn-secondary" type="reset" value="Reset" onclick="resetForm()">
                </div>
                </div>
@@ -141,7 +141,10 @@
                </div>   
                </div>
                     <div class="pt-4 d-flex mx-auto justify-content-center align-items-center col-12 col-md-4">
-                         <img style="display:none;" class="img-preview" id="preview" src="" >
+                         <button class="border-0 bg-transparent" type="button" onclick="deleteImg()">
+                         <img style="display:none;" class="img-preview border border-5 rounded" id="preview" src="" >
+                         </button>
+                         </div>
                     </div>
                     <br>
                     <br>
