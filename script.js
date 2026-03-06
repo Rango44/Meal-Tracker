@@ -283,8 +283,9 @@ function createCard(mealItem, key) {
       </div>
     </div>
 
-      <div class="col-5 border rounded-end h-100 ">
-      ${mealItem.mealimage ? '<img class="img-card border border-1 rounded-end" src="' + mealItem.mealimage + '">' : '<img class="h-75 mt-4 ps-1 img-card rounded-end" src="source/noimage.png">' }
+      <div class="col-5 border rounded-end h-100" data-bs-toggle="modal" data-bs-target="#mealModal" onclick="mealModal('${key}')">
+      ${mealItem.mealimage ? '<img class="img-card border border-1 rounded-end" src="' + mealItem.mealimage + '" >' 
+    : '<img class="h-75 mt-4 ps-1 img-card rounded-end" src="source/noimage.png">' }
     </div>
 
     
