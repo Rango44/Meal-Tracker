@@ -1,6 +1,7 @@
 loadMeals(); // load from local storage
  let mealKey = null;
  let addingItem = null;
+ let selectedDate = null;
 
 function save() {
 
@@ -43,7 +44,7 @@ function togglePages(page, btn) {
     }
 
     if (page === 'viewallmealsPage') {
-        
+        loadMeals(); // load meals, ensures the information is always updated when viewing
     }
 }
       
@@ -246,6 +247,12 @@ container5.innerHTML='';
 
 function createCard(mealItem, key) {
 
+let addBtn = '';
+
+if (addingItem === true) {
+    addBtn= `<input type="button" class="btn btn-success ms-3" value="Add" onclick="confirmAdd('${key}')"></input>` // add button for when adding a meal to the calendar
+
+};
 
     return `
 
@@ -259,6 +266,7 @@ function createCard(mealItem, key) {
             ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing --></p>
         
             <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = View onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
+            ${addBtn}
             
       </div>
     </div>
@@ -427,11 +435,21 @@ async function addItem(date) {
     let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal
 
     modalInstance.hide()
-    togglePages('viewallmealsPage')
     addingItem=true;
+    selectedDate = date;
+    togglePages('viewallmealsPage')
+    
 
 
-    addingItem=false;
+    
+}
+
+async function confirmAdd(key) {
+    
+ togglePages('calendarPage')
+ 
+ window.alert("Item added to " + selectedDate);
+addingItem=null;
 }
     
 
