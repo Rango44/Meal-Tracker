@@ -1,5 +1,6 @@
 loadMeals(); // load from local storage
  let mealKey = null;
+ let addingItem = null;
 
 function save() {
 
@@ -45,27 +46,6 @@ function togglePages(page, btn) {
         
     }
 }
-
-function initCal(){
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridWeek' ,
-          height: 500,
-          aspectRatio: 1,
-          headerToolbar: {
-               left: 'title',
-               right: 'dayGridWeek,dayGridMonth',
-          },
-
-          footerToolbar: {
-               right: 'prev,next'
-          }
-
-
-        });
-        calendar.render();
-      };
-
       
 
 let imageURL = '';
@@ -304,9 +284,9 @@ async function mealModal(key) {
     const json = await localforage.getItem(key); // 
     const mealItem = JSON.parse(json);
 
-    let title = document.getElementById('modalTitle');
-    let container = document.getElementById('modalBody');
-    let footer = document.getElementById('modal-footer');
+    let title = document.getElementById('mealModalTitle');
+    let container = document.getElementById('mealModalBody');
+    let footer = document.getElementById('mealModal-footer');
 
     title.innerHTML = `${mealItem.mealname}`
 
@@ -335,6 +315,52 @@ async function mealModal(key) {
     `
 
 }
+
+
+function initCal(){
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth' ,
+          height: '100%',
+          aspectRatio: 1,
+          headerToolbar: {
+               left: 'title',
+               right: 'prev,next',
+          },
+
+          footerToolbar: {
+               
+          },
+
+
+          dateClick: function(info) {
+            let date = info.dateStr;
+
+            let title = document.getElementById('calModalTitle');
+            let container = document.getElementById('calModalBody');
+            let footer = document.getElementById('calModal-footer');
+
+            title.innerHTML= `${date}`
+
+                container.innerHTML = `
+
+                `
+
+                footer.innerHTML = `
+                 <button type="button" class="btn btn-primary" onclick="addItem('${date}')">Add</button>
+                `
+
+                let modal = (document.getElementById('calendarModal'));
+                let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
+                modalInstance.show();
+          }   
+
+
+        });
+
+
+        calendar.render();
+      };
 
 
 function deleteItem(key) {
@@ -393,6 +419,19 @@ async function editItem(key) {
     
 
     
+}
+
+async function addItem(date) {
+
+    let modal = document.getElementById('calendarModal');
+    let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal
+
+    modalInstance.hide()
+    togglePages('viewallmealsPage')
+    addingItem=true;
+
+
+    addingItem=false;
 }
     
 

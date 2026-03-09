@@ -99,3 +99,8 @@ object-fit: fill;
   -webkit-mask-image: linear-gradient(to right, rgb(0, 0, 0) 95%, transparent 100%);
     mask-image: linear-gradient(to right, rgb(0, 0, 0) 95%, transparent 100%);
 }
+
+.fc a {
+    color: inherit; /* Forces calendar to use the normal text color (black/gray) */
+    text-decoration: none; /* Removes the underline */
+}

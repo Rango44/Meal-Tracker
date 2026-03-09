@@ -205,32 +205,15 @@
 
                </div>
 
+
                <!-- calendar interface -->
 <div class="pageview" id="calendarPage" style="display:none">
-     <h2>Calendar</h2>
-     <!-- code for triggering function once date is clicked here-->
-     <p>calendar here</p>
-          <div id='calendar' class=px-4></div>
-
-          <input type="button" id="temp" onclick="togglePages('datePage')"/> <!--"view meals on date page. pressing on a date will trigger this"-->
+     <div style="height: 500px">
+          <div id='calendar' class="px-4 col-12 col-md-8 d-flex mx-auto my-auto" ></div>
      </div>
+</div>
 
-          <!-- view meals on selected date interface -->
-          <div class="pageview container-fluid" id="datePage" style="display:none">
-               <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('calendarPage')">
-          <img src="source/backarrow.png" id="backarrow">
-          </button>
-               <p>VIEW meals on selected date here</p>
-               <input type="button" id="temp" value="add meals on to date page" onclick="togglePages('addmealsPage')"/>
-               </div>
-
-          <!-- add meal interface -->
-          <div class="pageview container-fluid" id="addmealsPage" style="display:none">
-               <button class="btn btn-secondary" type="button" id="backbtn" value="◀" onclick="togglePages('datePage')">
-          <img src="source/backarrow.png" id="backarrow">
-          </button>
-               <p>view meals to ADD selected date here. Likely will be the same as view all meals page but with inputs to add meals to the seelcted date</p>
-               </div>
+     
 
                <!-- settings interface -->
 <div class="pageview container-fluid col-12 col-md-8" id="settingsPage" style="display:none">
@@ -294,20 +277,40 @@
 </div>
 </nav>
 
-<!--modal html, hidden-->
+<!--meal modal html, hidden-->
 <div class="modal fade" id="mealModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header" >
-        <h5 class="modal-title text-wrap text-break" id="modalTitle"></h5>
+        <h5 class="modal-title text-wrap text-break" id="mealModalTitle"></h5>
         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" id="modalBody">
+      <div class="modal-body" id="mealModalBody">
      
       </div>
-      <div class="modal-footer" id ="modal-footer"> <!-- where buttons go, created in script.js-->
+      <div class="modal-footer" id ="mealModal-footer"> <!-- where buttons go, created in script.js-->
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--calendar modal html, hidden-->
+<div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <h5 class="modal-title text-wrap text-break" id="calModalTitle">Date</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="calModalBody">
+     
+      </div>
+      <div class="modal-footer" id ="calModal-footer"> <!-- where buttons go, created in script.js-->
         
       </div>
     </div>
