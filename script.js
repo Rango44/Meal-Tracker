@@ -25,6 +25,7 @@ function togglePages(page, btn) {
     
 
     if (page === 'calendarPage') {
+        loadMeals(); // load meals, ensures the information is always updated when viewing
         initCal();
     }
 
@@ -76,6 +77,8 @@ const form = document.querySelector('form'); //selects the form
             delete mealItem.mealimage // clear empty object if no iamge is uplaoded so we can verify if there actually is an image or not
         }
 
+
+
         const json = JSON.stringify(mealItem);
 
         if (mealKey !== null) { // if we're editing an item
@@ -88,12 +91,7 @@ const form = document.querySelector('form'); //selects the form
                 window.alert(error);
             }
 
-        }
-
-        
-
-        else {
-            try {
+        } else { try {
             await localforage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
             } catch (error) {
                 window.alert(error);
@@ -208,10 +206,6 @@ container5.innerHTML='';
         return timeB - timeA; //newest order first
         
         });
-    
-    
-        
-        
 // sortedkeys.forEach(key => {    // way to get data from local storage (olddddddddd)
 
     for (const key of sortedkeys) {
@@ -347,22 +341,33 @@ function initCal(){
           },
 
 
-          dateClick: function(info) {
+          dateClick: async function(info) { // runs when you click on a date
             let date = info.dateStr;
-
             let title = document.getElementById('calModalTitle');
             let container = document.getElementById('calModalBody');
             let footer = document.getElementById('calModal-footer');
+            container.innerHTML = '';
+
+            const keys = (await localforage.keys()) //gets all keys from local storage
+            .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
+
+            for (const key of keys) { // get all meals
+            const json = await localforage.getItem(key);
+            const mealItem = JSON.parse(json);
+            
+
+            if (mealItem.calDates && mealItem.calDates.includes(date)) { // if an item has a cal date array that has the selected date in the index
+                container.innerHTML += createCard(mealItem, key); // display meal card if its planned for the selected date
+            }
+        }
+            
 
             title.innerHTML= `${date}`
 
-                container.innerHTML = `
 
-                `
-
-                footer.innerHTML = `
-                 <button type="button" class="btn btn-primary" onclick="addItem('${date}')">Add</button>
-                `
+            footer.innerHTML = `
+            <button type="button" class="btn btn-primary" onclick="addItem('${date}')">Add</button>
+            `
 
                 let modal = (document.getElementById('calendarModal'));
                 let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
@@ -370,7 +375,7 @@ function initCal(){
           }   
 
 
-        });
+});
 
 
         calendar.render();
@@ -461,18 +466,28 @@ async function confirmAdd(key) {
 
     const calendarPage = document.getElementById('calendarbtn')
     const mealPage = document.getElementById('mealpagebtn')
-    const body = document.getElementById('calModalbody');
+    const container = document.getElementById('calModalBody');
 
-    const json = await localforage.getItem(key); // 
+    let json = await localforage.getItem(key); // 
     const mealItem = JSON.parse(json);
 
-    
- togglePages('calendarPage')
+    if (mealItem.calDates) { //if the json object has a calendar date array, add the date to it. 
+        mealItem.calDates.push(selectedDate);
+    } else { // if array doesnt exist, make the array and then add to it. Stores date(s) a meal is planned for in the calendar.
+        mealItem.calDates = []; 
+        mealItem.calDates.push(selectedDate);
+    }
 
-mealPage.classList.remove('active');
-calendarPage.classList.add('active');
- 
- window.alert("Item added to " + selectedDate);
+    json = JSON.stringify(mealItem); // convert for saving
+    await localforage.setItem(key, json); 
+
+    container.innerHTML += createCard(mealItem, key);
+    togglePages('calendarPage')
+    
+    mealPage.classList.remove('active');
+    calendarPage.classList.add('active');
+    
+    window.alert("Item added to " + selectedDate);
 
 
 addingItem=null;
