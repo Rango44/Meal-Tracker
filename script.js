@@ -46,6 +46,10 @@ function togglePages(page, btn) {
     if (page === 'viewallmealsPage') {
         loadMeals(); // load meals, ensures the information is always updated when viewing
     }
+
+    if (page !== 'viewallmealsPage' && page !== 'mealsPage') { // if the page isnt a meal page after going to add to the calendar, disable the add button on the card button, assuming they dont want to add anymore.
+        addingItem=null; // reset adding item variable so add button only appears when coming from calendar
+    }
 }
       
 
@@ -247,26 +251,28 @@ container5.innerHTML='';
 
 function createCard(mealItem, key) {
 
-let addBtn = '';
+let addBtn = ' ';
 
 if (addingItem === true) {
-    addBtn= `<input type="button" class="btn btn-success ms-3" value="Add" onclick="confirmAdd('${key}')"></input>` // add button for when adding a meal to the calendar
+    addBtn= `<input type="button" class="btn btn-success" value=" Add " onclick="confirmAdd('${key}')"></input>` // add button for when adding a meal to the calendar
 
 };
 
     return `
 
-  <div class="card mb-3 me-3" style="min-width: 339px; max-width: 339px; min-height: 180px; max-height: 180px">
+  <div class="card mb-3 me-3" style="min-width: 339px; max-width: 339px; height: 180px">
   <div class="row g-0 h-100">
     
     <div class="col-7 h-100">
       <div class="card-body justify">
-        <h5 class="card-title text-truncate fs-4">${mealItem.mealname}</h5>
+        <h5 class="card-title text-truncate fs-4 pb-1">${mealItem.mealname}</h5>
         <p class="card-text">${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
             ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing --></p>
-        
-            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = View onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
+
+        <div class="d-flex justify-content-between">
+            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = " View " onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
             ${addBtn}
+        </div>
             
       </div>
     </div>
@@ -429,26 +435,46 @@ async function editItem(key) {
     
 }
 
-async function addItem(date) {
+function addItem(date) {
+
+    const calendarPage = document.getElementById('calendarbtn')
+    const mealPage = document.getElementById('mealpagebtn')
 
     let modal = document.getElementById('calendarModal');
     let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal
 
+    togglePages('viewallmealsPage')
+
     modalInstance.hide()
     addingItem=true;
     selectedDate = date;
-    togglePages('viewallmealsPage')
     
+
+    calendarPage.classList.remove('active');
+    mealPage.classList.add('active');
 
 
     
 }
 
 async function confirmAdd(key) {
+
+    const calendarPage = document.getElementById('calendarbtn')
+    const mealPage = document.getElementById('mealpagebtn')
+    const body = document.getElementById('calModalbody');
+
+    const json = await localforage.getItem(key); // 
+    const mealItem = JSON.parse(json);
+
     
  togglePages('calendarPage')
+
+mealPage.classList.remove('active');
+calendarPage.classList.add('active');
  
  window.alert("Item added to " + selectedDate);
+
+
 addingItem=null;
 }
     
