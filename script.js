@@ -17,24 +17,40 @@ function togglePages(page, btn) {
     document.getElementById(page).style.display = 'block'; // shows the selected page
 
     const navBtns = document.querySelectorAll('.nav-btn'); //selects all elements with class 'nav-btn'
+    navBtns.forEach(btn => btn.classList.remove('active')); // removes 'active' class from all nav buttons
     
     if (btn !== undefined) { // if one of the nav bar buttons are pressed
-        navBtns.forEach(btn => btn.classList.remove('active')); // removes 'active' class from all nav buttons
+        
         document.getElementById(btn).classList.add('active'); // adds 'active' class to selected nav button
+    } else { // if the page changes from a button other than the nav button, find out what page it is and activate the right nav btn.
+        if (page === 'calendarPage') {
+            document.getElementById('calendarbtn').classList.add('active')
+        }
+        if (page === 'mealsPage' || page === 'viewallmealsPage' || page === 'createmealPage') {
+            document.getElementById('mealpagebtn').classList.add('active')
+        }
     }
     
 
     if (page === 'calendarPage') {
         loadMeals(); // load meals, ensures the information is always updated when viewing
         initCal();
+        
+        
     }
 
-    if (page === 'homePage') {
+    if (page === 'settingsPage') {
         
+    }
+
+
+    if (page === 'homePage') {
+       
     }
 
     if (page === 'mealsPage') {
         loadMeals(); // load meals, ensures the information is always updated when viewing
+        
     }
 
     if (page !== 'createmealPage') {
@@ -51,6 +67,7 @@ function togglePages(page, btn) {
     if (page !== 'viewallmealsPage' && page !== 'mealsPage') { // if the page isnt a meal page after going to add to the calendar, disable the add button on the card button, assuming they dont want to add anymore.
         addingItem=null; // reset adding item variable so add button only appears when coming from calendar
     }
+
 }
       
 
@@ -78,6 +95,16 @@ const form = document.querySelector('form'); //selects the form
         }
 
 
+        if (mealKey !== null) { // if we're editing an item
+
+        const oldJson = await localforage.getItem(mealKey); // get existing json data, needed to retrieve calDate array 
+        const oldItem = JSON.parse(oldJson);
+        
+        if (oldItem.calDates) {
+            mealItem.calDates = oldItem.calDates; // add existing calendar date array to new edited item
+            }
+        }
+
 
         const json = JSON.stringify(mealItem);
 
@@ -86,12 +113,15 @@ const form = document.querySelector('form'); //selects the form
             await localforage.setItem(mealKey, json); // replaces the json for existing item 
             document.getElementById('submit').value = 'Confirm'; // changes button text after we're done editing
             mealKey = null; // resets mealKey
+
+
             togglePages('mealsPage')
             } catch (error) {
                 window.alert(error);
             }
 
         } else { try {
+
             await localforage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
             } catch (error) {
                 window.alert(error);
@@ -101,7 +131,7 @@ const form = document.querySelector('form'); //selects the form
         imageURL=''; // needed to avoid image being saved multiple times
         
         console.log(mealItem);
-        displayMeal();
+        
         form.reset();
         
 
@@ -143,47 +173,6 @@ function deleteImg(){
     imageURL=''
 }
 
-async function displayMeal() {
-    let category = document.getElementById('category').value;
-
-    let container = document.getElementById(category);
-    let container2 = document.getElementById('recentlymademeals');
-    
-     container.innerHTML = ''; //clears the container ready for new data when loop runs multiple times
-     container2.innerHTML = ''; //clears the container ready for new data when loop runs multiple times
-
-    const keys = (await localforage.keys()) //gets all keys from local storage
-    .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_' avoids sorting settings data
-    const sortedkeys = keys.sort((a, b) => { //sorts using 2 parameters, a and b is the comparrison between 2keys
-        const timeA = parseInt(a.split("_")[1]); // select date part of key
-        const timeB = parseInt(b.split("_")[1]); // select date part of key
-        return timeB - timeA; // newest first order
-        
-        });
-    
-    
-        
-        
-       // sortedkeys.forEach(key => {    // way to get data from local storage (olddddddddd)
-
-       for (const key of sortedkeys) {
-            const json = await localforage.getItem(key);
-            const mealItem = JSON.parse(json);
-
-            container2.innerHTML += createCard(mealItem, key);
-
-            if (mealItem.category === category) {
-            container.innerHTML += createCard(mealItem, key);
-            }
-        };  
-           
-            
-    }
-    
-        
- 
-
-
 async function loadMeals() {
 let container = document.getElementById('breakfast');
 let container2 = document.getElementById('lunch');
@@ -191,7 +180,7 @@ let container3 = document.getElementById('dinner');
 let container4 = document.getElementById('baking/dessert');
 let container5 = document.getElementById('recentlymademeals');
 
-container .innerHTML='';
+container.innerHTML='';
 container2.innerHTML='';
 container3.innerHTML='';
 container4.innerHTML='';
@@ -442,9 +431,7 @@ async function editItem(key) {
 
 function addItem(date) {
 
-    const calendarPage = document.getElementById('calendarbtn')
-    const mealPage = document.getElementById('mealpagebtn')
-
+    
     let modal = document.getElementById('calendarModal');
     let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal
 
@@ -453,19 +440,12 @@ function addItem(date) {
     modalInstance.hide()
     addingItem=true;
     selectedDate = date;
-    
-
-    calendarPage.classList.remove('active');
-    mealPage.classList.add('active');
-
 
     
 }
 
 async function confirmAdd(key) {
 
-    const calendarPage = document.getElementById('calendarbtn')
-    const mealPage = document.getElementById('mealpagebtn')
     const container = document.getElementById('calModalBody');
 
     let json = await localforage.getItem(key); // 
@@ -483,9 +463,6 @@ async function confirmAdd(key) {
 
     container.innerHTML += createCard(mealItem, key);
     togglePages('calendarPage')
-    
-    mealPage.classList.remove('active');
-    calendarPage.classList.add('active');
     
     window.alert("Item added to " + selectedDate);
 
