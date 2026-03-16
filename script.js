@@ -368,7 +368,7 @@ async function initCal(){
 
 
     var calendarEl = document.getElementById('calendar');
-    calendarEl.innerHTML = ''; // clear calendar so it doesn't secretly duplicate
+    calendarEl.innerHTML = ''; // clear calendar before re writing so it doesn't secretly duplicate
     var calendar = new FullCalendar.Calendar(calendarEl, {
     
           initialView: 'dayGridMonth' ,
@@ -383,9 +383,6 @@ async function initCal(){
                 openDate(info.dateStr)
             },
 
-            eventClick: function(info) {
-                openDate(info.event.startStr)
-            }
 
         });
 
@@ -407,7 +404,7 @@ function deleteItem(key) {
     let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal 
 
     let text = "Are you sure you want to delete this item?"
-    
+
     if (confirm(text) == true) {
     localforage.removeItem(key);
     loadMeals();
