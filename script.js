@@ -2,6 +2,7 @@ loadMeals(); // load from local storage
  let mealKey = null;
  let addingItem = null;
  let selectedDate = null;
+ let onCal = null; 
 
 function save() {
 
@@ -33,10 +34,13 @@ function togglePages(page, btn) {
     
 
     if (page === 'calendarPage') {
+        onCal=true;
         loadMeals(); // load meals, ensures the information is always updated when viewing
         initCal();
-        
-        
+    }
+
+    if (page !== 'calendarPage') {
+        onCal=false;
     }
 
     if (page === 'settingsPage') {
@@ -231,22 +235,28 @@ container5.innerHTML='';
     
 
 
-function createCard(mealItem, key) {
+function createCard(mealItem, key, date) {
 
 let addBtn = ' ';
+let removeBtn = ' ';
 
 if (addingItem === true) {
     addBtn= `<input type="button" class="btn btn-success" value=" Add " onclick="confirmAdd('${key}')"></input>` // add button for when adding a meal to the calendar
 
 };
 
+if (onCal === true) {
+    removeBtn= `<input type="button" class="btn btn-danger" value="Remove" onclick="dateRemove('${key}', '${date}')"></input>` // add button for when removing a meal from the calendar
+}
+
+
     return `
 
-  <div class="card mb-3 me-3" style="min-width: 339px; max-width: 339px; height: 180px">
+  <div class="card ms-2 mb-3 me-3" style="min-width: 339px; max-width: 339px; height: 180px">
   <div class="row g-0 h-100">
     
     <div class="col-7 h-100">
-      <div class="card-body justify">
+      <div class="card-body">
         <h5 class="card-title text-truncate fs-4 pb-1">${mealItem.mealname}</h5>
         <p class="card-text">${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
             ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing --></p>
@@ -254,6 +264,7 @@ if (addingItem === true) {
         <div class="d-flex justify-content-between">
             <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = " View " onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
             ${addBtn}
+            ${removeBtn}
         </div>
             
       </div>
@@ -329,7 +340,7 @@ async function mealModal(key) {
             
 
             if (mealItem.calDates && mealItem.calDates.includes(date)) { // if an item has a cal date array that has the selected date in the index
-                container.innerHTML += createCard(mealItem, key); // display meal card if its planned for the selected date
+                container.innerHTML += createCard(mealItem, key, date); // display meal card if its planned for the selected date
             }
         }
             
@@ -496,6 +507,21 @@ async function confirmAdd(key) {
 
 
 addingItem=null;
+}
+
+async function dateRemove(key, date) {
+    let json = await localforage.getItem(key); 
+    const mealItem = JSON.parse(json);
+
+    let index = mealItem.calDates.indexOf(date); //find date/index in the array
+
+    mealItem.calDates.splice(index, 1); //remove date from array
+
+    json = JSON.stringify(mealItem); // convert for saving
+    await localforage.setItem(key, json); 
+
+    openDate(date); // refresh modal
+    initCal(); // refresh refresh calendar
 }
     
 
