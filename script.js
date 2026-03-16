@@ -227,7 +227,6 @@ container5.innerHTML='';
                 container2.innerHTML += createCard(mealItem, key);
             }
         };
-        
     }
     
 
@@ -314,27 +313,11 @@ async function mealModal(key) {
 }
 
 
-function initCal(){
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth' ,
-          height: '100%',
-          aspectRatio: 1,
-          headerToolbar: {
-               left: 'title',
-               right: 'prev,next',
-          },
-
-          footerToolbar: {
-               
-          },
-
-
-          dateClick: async function(info) { // runs when you click on a date
-            let date = info.dateStr;
+ async function openDate(date) { // runs when you click on a date on the calendar
             let title = document.getElementById('calModalTitle');
             let container = document.getElementById('calModalBody');
             let footer = document.getElementById('calModal-footer');
+            
             container.innerHTML = '';
 
             const keys = (await localforage.keys()) //gets all keys from local storage
@@ -363,12 +346,59 @@ function initCal(){
                 modalInstance.show();
           }   
 
+async function initCal(){
+    let events = []; // for calendar
 
-});
+    const keys = (await localforage.keys()) //gets all keys from local storage
+    .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
+
+    for (const key of keys) { // get all meals
+    const json = await localforage.getItem(key);
+    const mealItem = JSON.parse(json);
+
+        if (mealItem.calDates) { // if a meal has a planned date
+            mealItem.calDates.forEach(date => { // add event to calendar for every date the meal is planned for
+                events.push({
+                    start: date,
+                    display: 'background',
+                    })
+                })
+            }
+        }
+
+
+    var calendarEl = document.getElementById('calendar');
+    calendarEl.innerHTML = ''; // clear calendar so it doesn't secretly duplicate
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+    
+          initialView: 'dayGridMonth' ,
+          height: '100%',
+          aspectRatio: 1,
+          events: events,
+          headerToolbar: {
+               left: 'title',
+               right: 'prev,next',
+            },
+            dateClick: function(info) {
+                openDate(info.dateStr)
+            },
+
+            eventClick: function(info) {
+                openDate(info.event.startStr)
+            }
+
+        });
 
 
         calendar.render();
       };
+
+
+
+         
+
+
+
 
 
 function deleteItem(key) {
@@ -377,6 +407,7 @@ function deleteItem(key) {
     let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal 
 
     let text = "Are you sure you want to delete this item?"
+    
     if (confirm(text) == true) {
     localforage.removeItem(key);
     loadMeals();
