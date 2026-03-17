@@ -328,6 +328,8 @@ async function mealModal(key) {
             let title = document.getElementById('calModalTitle');
             let container = document.getElementById('calModalBody');
             let footer = document.getElementById('calModal-footer');
+            let totalCal = 0;
+            let totalCost = 0;
             
             container.innerHTML = '';
 
@@ -337,19 +339,31 @@ async function mealModal(key) {
             for (const key of keys) { // get all meals
             const json = await localforage.getItem(key);
             const mealItem = JSON.parse(json);
-            
 
+            
+            
             if (mealItem.calDates && mealItem.calDates.includes(date)) { // if an item has a cal date array that has the selected date in the index
                 container.innerHTML += createCard(mealItem, key, date); // display meal card if its planned for the selected date
+
+                totalCal += Number (mealItem.calories)
+                totalCost += Number (mealItem.cost)
             }
         }
             
-
+             
             title.innerHTML= `${date}`
 
+            let stats = `<div> </div>  `; // creates empty space so add button is on the right if nothing is planned
 
-            footer.innerHTML = `
-            <button type="button" class="btn btn-primary" onclick="addItem('${date}')">Add</button>
+            if (container.innerHTML !== '') { //if there's meals planned for the day, show stats
+                stats = ` <div> <strong>Total calories: </strong> ${totalCal} <br> <strong> Total cost: </strong> £${totalCost}</div>`
+                        
+            }
+
+            footer.innerHTML = 
+            `
+            ${stats}
+            <button type="button" class="btn btn-primary " onclick="addItem('${date}')">Add</button>
             `
 
                 let modal = (document.getElementById('calendarModal'));
@@ -400,14 +414,6 @@ async function initCal(){
 
         calendar.render();
       };
-
-
-
-         
-
-
-
-
 
 function deleteItem(key) {
 
