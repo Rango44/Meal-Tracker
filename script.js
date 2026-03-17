@@ -189,6 +189,7 @@ container2.innerHTML='';
 container3.innerHTML='';
 container4.innerHTML='';
 container5.innerHTML='';
+let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
 
 
         const keys = (await localforage.keys()) //gets all keys from local storage
@@ -205,33 +206,53 @@ container5.innerHTML='';
             const json = await localforage.getItem(key);
             const mealItem = JSON.parse(json);
 
-            let container2 = document.getElementById('recentlymademeals');
+           
 
             if (mealItem.category === 'breakfast') {
-                const container=document.getElementById('breakfast');
+                
                 container.innerHTML += createCard(mealItem, key);
-                container2.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'lunch') {
-                const container=document.getElementById('lunch');
-                container.innerHTML += createCard(mealItem, key);
+                
                 container2.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'dinner') {
-                const container=document.getElementById('dinner');
-                container.innerHTML += createCard(mealItem, key);
-                container2.innerHTML += createCard(mealItem, key);
+                
+                container3.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'baking/dessert') {
-                const container=document.getElementById('baking/dessert');
-                container.innerHTML += createCard(mealItem, key);
-                container2.innerHTML += createCard(mealItem, key);
+               
+                container4.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
+            
         };
+
+    if (container.innerHTML === '') {
+        container.innerHTML = emptyMsg;
     }
+
+    if (container2.innerHTML === '') {
+        container2.innerHTML = emptyMsg;
+    }
+
+    if (container3.innerHTML === '') {
+        container3.innerHTML = emptyMsg;
+    }
+    if (container4.innerHTML === '') {
+        container4.innerHTML = emptyMsg;
+    }
+    if (container5.innerHTML === '') {
+        container5.innerHTML = emptyMsg;
+    } 
+            
+}
     
 
 
@@ -366,9 +387,13 @@ async function mealModal(key) {
             <button type="button" class="btn btn-primary " onclick="addItem('${date}')">Add</button>
             `
 
-                let modal = (document.getElementById('calendarModal'));
-                let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
-                modalInstance.show();
+            let modal = (document.getElementById('calendarModal'));
+            let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
+            modalInstance.show();
+
+            if (container.innerHTML === '') {
+                container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
+            }
           }   
 
 async function initCal(){
