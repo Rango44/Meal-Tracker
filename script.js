@@ -179,7 +179,16 @@ function deleteImg(){
     imageURL=''
 }
 
+let loading = null;
 async function loadMeals() {
+
+
+
+if (loading === true) {return} // don't run fucntion if it's still loading, prevents cards getting duplicated when navigating the app quickly.
+
+loading = true;
+document.getElementById('loadingindicator').classList.remove('d-none') //hide loading
+
 let container = document.getElementById('breakfast');
 let container2 = document.getElementById('lunch');
 let container3 = document.getElementById('dinner');
@@ -191,6 +200,7 @@ container2.innerHTML='';
 container3.innerHTML='';
 container4.innerHTML='';
 container5.innerHTML='';
+
 let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
 
 
@@ -253,8 +263,12 @@ let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
     if (container5.innerHTML === '') {
         container5.innerHTML = emptyMsg;
     } 
-            
-}
+
+    loading = null; //loading finished
+    document.getElementById('loadingindicator').classList.add('d-none') //hide loading
+} 
+    
+
     
 
 
@@ -317,9 +331,9 @@ async function mealModal(key) {
     let header = document.getElementById('mealModalHeader');
     let container = document.getElementById('mealModalBody');
     let footer = document.getElementById('mealModal-footer');
-    let closeBtn = `<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>`
+    let closeBtn = `<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>` //normal close button
 
-    if (prevModal !== null) {
+    if (prevModal !== null) { // close button is a back button so we return to calerdar modal
         closeBtn = `<button type="button" class="close" data-bs-toggle="modal" data-bs-target="#calendarModal" aria-label="Close"> <span aria-hidden="true">&larr;</span> </button>`
     }
     
