@@ -3,6 +3,7 @@ loadMeals(); // load from local storage
  let addingItem = null;
  let selectedDate = null;
  let onCal = null; 
+ let prevModal = null; 
 
 function save() {
 
@@ -41,6 +42,7 @@ function togglePages(page, btn) {
 
     if (page !== 'calendarPage') {
         onCal=false;
+        prevModal = null; 
     }
 
     if (page === 'settingsPage') {
@@ -311,12 +313,18 @@ if (onCal === true) {
 async function mealModal(key) {
     const json = await localforage.getItem(key); // 
     const mealItem = JSON.parse(json);
-
-    let title = document.getElementById('mealModalTitle');
+    
+    let header = document.getElementById('mealModalHeader');
     let container = document.getElementById('mealModalBody');
     let footer = document.getElementById('mealModal-footer');
+    let closeBtn = `<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>`
 
-    title.innerHTML = `${mealItem.mealname}`
+    if (prevModal !== null) {
+        closeBtn = `<button type="button" class="close" data-bs-toggle="modal" data-bs-target="#calendarModal" aria-label="Close"> <span aria-hidden="true">&larr;</span> </button>`
+    }
+    
+    header.innerHTML = `<h5 class="modal-title text-wrap text-break" id="mealModalTitle">${mealItem.mealname} </h5> ${closeBtn}` 
+     
 
     container.innerHTML = `
             <div class="container-fluid">
@@ -341,6 +349,7 @@ async function mealModal(key) {
         <button type="button" class="btn btn-secondary" onclick="editItem('${key}')">Edit</button>
         <button type="button" class="btn btn-danger" onclick="deleteItem('${key}')">Delete</button>
     `
+
 
 }
 
@@ -389,6 +398,7 @@ async function mealModal(key) {
 
             let modal = (document.getElementById('calendarModal'));
             let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
+            prevModal = modalInstance; //save modal so we can rturn to it
             modalInstance.show();
 
             if (container.innerHTML === '') {
