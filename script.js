@@ -35,14 +35,17 @@ function togglePages(page, btn) {
     
 
     if (page === 'calendarPage') {
+        loading=true;
         onCal=true;
         loadMeals(); // load meals, ensures the information is always updated when viewing
         initCal();
+        loading=null;
     }
 
     if (page !== 'calendarPage') {
         onCal=false;
         prevModal = null; 
+        
     }
 
     if (page === 'settingsPage') {
