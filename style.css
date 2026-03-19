@@ -115,3 +115,19 @@ object-fit: fill;
     color: inherit; /* Forces calendar to use the normal text color (black/gray) */
     text-decoration: none; /* Removes the underline */
 }
+
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fadeInLeft {
+    animation: fadeInLeft 1s;
+}
