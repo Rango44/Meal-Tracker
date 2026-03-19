@@ -215,8 +215,6 @@ let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
 // sortedkeys.forEach(key => {    // way to get data from local storage (olddddddddd)
 
     for (const key of sortedkeys) {
-
-        if (document.getElementById(key)) {continue} // if card already exists on the page, skip it so it doesn't duplicate, needed for animation to work properly
             const json = await localforage.getItem(key);
             const mealItem = JSON.parse(json);
 
@@ -224,26 +222,26 @@ let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
 
             if (mealItem.category === 'breakfast') {
                 
-                container.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
-                container5.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
+                container.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'lunch') {
                 
-                container2.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
-                container5.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
+                container2.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'dinner') {
                 
-                container3.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
-                container5.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
+                container3.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
 
             else if (mealItem.category === 'baking/dessert') {
                
-                container4.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
-                container5.insertAdjacentHTML('beforeend', createCard(mealItem, key,));
+                container4.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
             }
             
         };
@@ -290,8 +288,8 @@ if (onCal === true) {
 
 
     return `
-<div id="${key}" class="fadeInLeft">
-  <div class="card mb-3 me-2 " style="min-width: 339px; max-width: 339px; height: 180px">
+
+  <div class="card ms-2 mb-3 me-3" style="min-width: 339px; max-width: 339px; height: 180px">
   <div class="row g-0 h-100">
     
     <div class="col-7 h-100">
