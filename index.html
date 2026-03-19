@@ -12,14 +12,16 @@
 
 <body>
    
+
+<div class="sticky-top">
 <h1 
-     class="container-fluid sticky-top bg-info display-4 border-bottom border-2 border-black"> Meal tracker 
+     class="container-fluid bg-info display-4 border-bottom border-2 border-black mb-0"> Meal tracker 
      <small class="text-muted float-end" style="font-size: 35%"> Demo by Harvey Bosworth</small>
 </h1>
 
-<div class="d-flex justify-content-end d-none" id="loadingindicator">
-<div class="spinner-border spinner-border-sm text-warning position-fixed"  role="status">
-  <span class="visually-hidden">Loading...</span>
+
+<div class="progress rounded-0 d-none" role="progressbar" style="height: 6px;" id="loadingindicator">
+  <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" style="width: 100%"></div>
 </div>
 </div>
 
