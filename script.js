@@ -1,9 +1,9 @@
-loadMeals(); // load from local storage
  let mealKey = null;
  let addingItem = null;
  let selectedDate = null;
  let onCal = null; 
  let prevModal = null; 
+ let loading = null;
 
 function save() {
 
@@ -179,7 +179,7 @@ function deleteImg(){
     imageURL=''
 }
 
-let loading = null;
+
 async function loadMeals() {
 
 
@@ -579,4 +579,37 @@ async function dateRemove(key, date) {
     initCal(); // refresh refresh calendar
 }
     
+async function clearData() {
 
+    let text = "Are you sure you want to remove ALL of your data?"
+
+    if (confirm(text) === false) {
+        return;
+    } else {
+       await localforage.clear();
+       loadMeals();
+       window.alert("DATA REMOVED");
+    } 
+}
+
+async function exportData() {
+
+    let everything = {}; // object to store everything temporarily
+    let data
+
+    const keys = (await localforage.keys()) //gets all keys from local storage
+            .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
+
+            for (const key of keys) { // get all meals
+            const json = await localforage.getItem(key);
+            everything[key]= JSON.parse(json); // parse each item to the JS object with the key/title 
+    }
+    data = JSON.stringify(everything, null, 2); // convert object to json string for exporting, separates each line with line breaks
+
+    let a = document.createElement("a");
+    let file = new Blob([data], {type: "application/json" });
+    a.href = URL.createObjectURL(file);
+    a.download = "meal-tracker-data.json";
+    a.click();
+
+}
