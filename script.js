@@ -616,3 +616,47 @@ async function exportData() {
     a.click();
 
 }
+
+async function importData() {
+    
+    const input = document.getElementById('importInput');
+
+    input.onchange = read;// runs when a file is selected 
+
+    function read() {
+        const file = input.files[0]; //get file from import input
+
+        if (file.type !== "application/json") { //if the file isn't json, halt and notify
+        window.alert("Select a JSON file exported from this app... (meal-tracker-data.json)");
+        input.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    let names = ''
+
+    reader.addEventListener("load", async () => { // runs when the file gets read from readastext
+    //console.log(reader.result);
+    const data = JSON.parse(reader.result);
+    //console.log(reader.result);
+
+
+    for (const key in data) {
+        const json = JSON.stringify(data[key]) //get data for eaach item and convert to json string for saving
+        await localforage.setItem(key, json); // save item with extracted key and json data
+        names += data[key].mealname + ',  '; //accumulate imported names
+    }
+
+    if (names.includes('undefined'))  { //if theres an undefined name. this appears when wrong json data is imported.
+        window.alert("Invalid data detected. Please select a JSON file exported from this app... (meal-tracker-data.json)");
+    } else {
+    window.alert("Successfully imported : " + names);
+    }
+    names = ''; //reset for next fucntion run
+    input.value = ''; //reset so another file can be imported
+    });
+
+    reader.readAsText(file); //reads file and then runs the above ^
+    
+    }
+}

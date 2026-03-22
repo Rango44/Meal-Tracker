@@ -245,15 +245,16 @@
 
      <p class="me-3 text-start my-auto"> Export data for importing on another device</p>
      
-      <button type="button" class="btn btn-outline-secondary" style="min-width: 100px;" onclick="exportData()"">Export</button>
+      <button type="button" class="btn btn-outline-secondary" style="min-width: 100px;" onclick="exportData()">Export</button>
 
 </div>
 
 <div class="d-flex justify-content-between align-items-center pt-5">
 
      <p class="me-3 text-start my-auto"> Import data using exported file</p>
-     
-      <button type="button" class="btn btn-outline-secondary" style="min-width: 100px;">Import</button>
+
+     <label class= "btn btn-outline-secondary" style="min-width: 100px;" for="importInput">Import</label>
+      <input type="file" id="importInput"style="display: none;" class="btn btn-outline-secondary" style="min-width: 100px;" onclick="importData()" accept=".json"></button>
 
 </div>
 
