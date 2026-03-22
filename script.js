@@ -139,7 +139,7 @@ const form = document.querySelector('form'); //selects the form
 
         imageURL=''; // needed to avoid image being saved multiple times
         
-        console.log(mealItem);
+        //console.log(mealItem);
         
         form.reset();
         
@@ -372,56 +372,59 @@ async function mealModal(key) {
 
 
  async function openDate(date) { // runs when you click on a date on the calendar
-            let title = document.getElementById('calModalTitle');
-            let container = document.getElementById('calModalBody');
-            let footer = document.getElementById('calModal-footer');
-            let totalCal = 0;
-            let totalCost = 0;
-            
-            container.innerHTML = '';
+        let title = document.getElementById('calModalTitle');
+        let container = document.getElementById('calModalBody');
+        let footer = document.getElementById('calModal-footer');
+        let totalCal = 0;
+        let totalCost = 0;
 
-            const keys = (await localforage.keys()) //gets all keys from local storage
-            .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
+        const [year, month, day] = date.split('-'); // sepearte date parts separated by hyphens for formatting
+        const tempDate = new Date(year, month - 1, day); //creates a JS date thing so we can format it. -1 month because months are counted 0-11
+        
+        const options = { // for date formatting 
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        };
 
-            for (const key of keys) { // get all meals
-            const json = await localforage.getItem(key);
-            const mealItem = JSON.parse(json);
-
-            
-            
-            if (mealItem.calDates && mealItem.calDates.includes(date)) { // if an item has a cal date array that has the selected date in the index
-                container.innerHTML += createCard(mealItem, key, date); // display meal card if its planned for the selected date
-
-                totalCal += Number (mealItem.calories)
-                totalCost += Number (mealItem.cost)
-            }
+        formatDate = tempDate.toLocaleDateString('en-UK', options); //formats date
+        
+        container.innerHTML = '';
+        const keys = (await localforage.keys()) //gets all keys from local storage
+        .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
+        for (const key of keys) { // get all meals
+        const json = await localforage.getItem(key);
+        const mealItem = JSON.parse(json);
+        
+        
+        if (mealItem.calDates && mealItem.calDates.includes(date)) { // if an item has a cal date array that has the selected date in the index
+            container.innerHTML += createCard(mealItem, key, date); // display meal card if its planned for the selected date
+            totalCal += Number (mealItem.calories)
+            totalCost += Number (mealItem.cost)
         }
-            
-             
-            title.innerHTML= `${date}`
-
-            let stats = `<div> </div>  `; // creates empty space so add button is on the right if nothing is planned
-
-            if (container.innerHTML !== '') { //if there's meals planned for the day, show stats
-                stats = ` <div> <strong>Total calories: </strong> ${totalCal} <br> <strong> Total cost: </strong> £${totalCost}</div>`
-                        
-            }
-
-            footer.innerHTML = 
-            `
-            ${stats}
-            <button type="button" class="btn btn-primary " onclick="addItem('${date}')">Add</button>
-            `
-
-            let modal = (document.getElementById('calendarModal'));
-            let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
-            prevModal = modalInstance; //save modal so we can rturn to it
-            modalInstance.show();
-
-            if (container.innerHTML === '') {
-                container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
-            }
-          }   
+    }
+        
+         
+        title.innerHTML= `${formatDate}`
+        let stats = `<div> </div>  `; // creates empty space so add button is on the right if nothing is planned
+        if (container.innerHTML !== '') { //if there's meals planned for the day, show stats
+            stats = ` <div> <strong>Total calories: </strong> ${totalCal} <br> <strong> Total cost: </strong> £${totalCost}</div>`
+                    
+        }
+        footer.innerHTML = 
+        `
+        ${stats}
+        <button type="button" class="btn btn-primary " onclick="addItem('${date}')">Add</button>
+        `
+        let modal = (document.getElementById('calendarModal'));
+        let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
+        prevModal = modalInstance; //save modal so we can rturn to it
+        modalInstance.show();
+        if (container.innerHTML === '') {
+            container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
+        }
+      }   
 
 async function initCal(){
     let events = []; // for calendar
@@ -560,8 +563,6 @@ async function confirmAdd(key) {
 
     container.innerHTML += createCard(mealItem, key);
     togglePages('calendarPage')
-    
-    window.alert("Item added to " + selectedDate);
 
 
 addingItem=null;
@@ -654,6 +655,7 @@ async function importData() {
     }
     names = ''; //reset for next fucntion run
     input.value = ''; //reset so another file can be imported
+
     });
 
     reader.readAsText(file); //reads file and then runs the above ^
