@@ -35,6 +35,9 @@ function togglePages(page, btn) {
     
 
     if (page === 'calendarPage') {
+
+        if (loading === true) {return}
+
         loading=true;
         onCal=true;
         loadMeals(); // load meals, ensures the information is always updated when viewing
@@ -372,6 +375,9 @@ async function mealModal(key) {
 
 
  async function openDate(date) { // runs when you click on a date on the calendar
+
+
+
         let title = document.getElementById('calModalTitle');
         let container = document.getElementById('calModalBody');
         let footer = document.getElementById('calModal-footer');
