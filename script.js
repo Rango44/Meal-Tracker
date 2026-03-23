@@ -376,7 +376,8 @@ async function mealModal(key) {
 
  async function openDate(date) { // runs when you click on a date on the calendar
 
-
+if (loading === true) {return}
+loading=true;
 
         let title = document.getElementById('calModalTitle');
         let container = document.getElementById('calModalBody');
@@ -430,6 +431,7 @@ async function mealModal(key) {
         if (container.innerHTML === '') {
             container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
         }
+        loading=false;
       }   
 
 async function initCal(){
