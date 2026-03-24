@@ -5,13 +5,15 @@
  let prevModal = null; 
  let loading = null;
 
+const urlInput = document.getElementById('URL');
+const paste = document.getElementById('paste');
+const label = document.getElementById('URLlabel')
+
 function save() {
 
 }
 
-function load() {
 
-    }
 
 function togglePages(page, btn) {
     const pages = document.querySelectorAll('.pageview'); //selects all elements with class 'pageview'
@@ -70,6 +72,11 @@ function togglePages(page, btn) {
         document.getElementById('submit').value = 'Confirm'; //ensure button is confirm after leaving editing page
         document.getElementById('preview').src = ''; //ensure preview image is cleared after leaving page
         document.getElementById("preview").style.display = 'none'; //no preview image box
+        
+    }
+
+    if (page === 'createmealPage') {
+        URLUI(); // ensures the UI is correct when editing an item with a url
     }
 
     if (page === 'viewallmealsPage') {
@@ -141,13 +148,39 @@ const form = document.querySelector('form'); //selects the form
         }
 
         imageURL=''; // needed to avoid image being saved multiple times
-        
+    
         //console.log(mealItem);
         
         form.reset();
         
 
         });
+
+function URLUI()  {
+
+    if (urlInput.value.includes('https://')){ //if it starts with https
+                paste.classList.remove('d-none') // show paste button
+
+                label.onclick = function() {let url = urlInput.value;
+                     if(url) window.open(url)};
+                label.innerHTML = '🔎'
+
+            if (urlInput.value === '') {
+                paste.classList.add('d-none')
+                label.innerHTML = 'Video URL:'
+            }
+
+            } else {
+                paste.classList.add('d-none')
+                label.innerHTML = 'Video URL:'
+            }
+}
+        //Create meal page - paste button visibility control and URL click fucntionality
+       urlInput.addEventListener('input', URLUI);// runs when theres an input in the URL input box
+
+            
+
+        
 
 document.querySelector("#mealimage").addEventListener("change", function () { // image processing, runs when image is uplaoded
 
@@ -171,6 +204,8 @@ function resetForm() {
         document.getElementById('preview').src = ''; //preview image is cleared
         document.getElementById('preview').style.display = 'none';
         imageURL=''
+        paste.classList.add('d-none')
+        label.innerHTML = 'Video URL:'
 }
 
 function removeImg() {
@@ -193,7 +228,7 @@ async function loadMeals() {
 if (loading === true) {return} // don't run fucntion if it's still loading, prevents cards getting duplicated when navigating the app quickly.
 
 loading = true;
-document.getElementById('loadingindicator').classList.remove('d-none') //hide loading
+document.getElementById('loadingindicator').classList.remove('d-none') //show loading
 
 let container = document.getElementById('breakfast');
 let container2 = document.getElementById('lunch');
@@ -675,3 +710,45 @@ async function importData() {
     
     }
 }
+
+async function urlPaste() { //microlink api used
+let description = ''
+let cleanDescription = ''
+let finalDescription = ''
+let text = ''
+let output = document.getElementById('instructions'); //text area on create meal page
+
+document.getElementById('loadingindicator').classList.remove('d-none') //show loading
+    
+    let request = await fetch ('https://api.microlink.io?url=' + urlInput.value);
+    let response = await request.json();
+
+    if (urlInput.value.includes ('instagram')) {
+        text = "Do you want to paste the description from the Insagram video?";
+        
+        if (confirm(text) === true) {
+            description = response.data.description;
+            cleanDescription = description.split(':') // removes the unwanted instagram text at the start of description (left of colon)
+            finalDescription = cleanDescription.slice(1).join(':').trim(); // shows the second part of array containing the real video description, includes other colons, gets rid of a space at the start the start of description.
+        } else {return}
+    }
+
+
+    if (urlInput.value.includes ('tiktok')) {
+        text = "Do you want to paste the description from the TikTok video?";
+
+        if (confirm(text) === true) {
+            finalDescription = response.data.description
+        }
+    }
+
+
+    else { window.alert ('Unkown source: please check your URL and only use videos from Youtube, TikTok, or Instagram.'); 
+        document.getElementById('loadingindicator').classList.add('d-none') //hide loading
+        return}
+
+    output.value += '\nDescription captured from video:\n' +finalDescription + '\n'
+    console.log(response)
+
+    document.getElementById('loadingindicator').classList.add('d-none')
+    }

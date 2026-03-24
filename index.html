@@ -4,6 +4,7 @@
      <link rel="stylesheet" type="text/css" href="https://cdn.curator.io/6.0/curator.embed.css" />
      <link rel="stylesheet" href="style.css"/>
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
@@ -95,20 +96,21 @@
           <div class="container text-center mt-4">
                <div class="d-flex mx-auto ">
                     <div class="input-group">
-                    <label class="input-group-text"for="URL"> Video URL:</label>
+                    <label class="input-group-text" id="URLlabel" for="URL"> Video URL:</label>
+
                     <input class="form-control" type="text" id="URL" name="URL">
                     </div>
                </div>
           </div>
                     
-          <div class="container text-start mt-4">
-               <div class="mx-auto  ">
+          <div class="container text-start mt-3">
+               <div class="mx-auto">
+               <div class="justify-content-between d-flex mb-1">
                     <label> Instructions + Ingredients:</label>
-                    
+                    <input class="btn btn-outline-secondary pt-0 pb-0  px-1 d-none" id="paste" type="button" value="Paste" onclick="urlPaste()">
+               </div>
                     <textarea class="form-control" id="instructions" name="instructions" style="height: 150px; line-height: 1.4;"></textarea>
                      
-                     <input class="btn justify-content-end" type="button" value="paste">   
-                    
                </div>
           </div>
 
