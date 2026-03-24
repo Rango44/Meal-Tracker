@@ -734,7 +734,7 @@ document.getElementById('loadingindicator').classList.remove('d-none') //show lo
     }
 
 
-    if (urlInput.value.includes ('tiktok')) {
+    else if (urlInput.value.includes ('tiktok')) {
         text = "Do you want to paste the description from the TikTok video?";
 
         if (confirm(text) === true) {
