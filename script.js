@@ -416,7 +416,7 @@ loading=true;
         title.innerHTML= `${formatDate}`
         let stats = `<div> </div>  `; // creates empty space so add button is on the right if nothing is planned
         if (container.innerHTML !== '') { //if there's meals planned for the day, show stats
-            stats = ` <div> <strong>Total calories: </strong> ${totalCal} <br> <strong> Total cost: </strong> £${totalCost}</div>`
+            stats = ` <div> <strong>Total calories: </strong> ${totalCal} <br> <strong> Total cost: </strong> £${totalCost.toFixed(2)}</div>`
                     
         }
         footer.innerHTML = 
@@ -427,10 +427,10 @@ loading=true;
         let modal = (document.getElementById('calendarModal'));
         let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
         prevModal = modalInstance; //save modal so we can rturn to it
+        
+        
         modalInstance.show();
-        if (container.innerHTML === '') {
-            container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
-        }
+        
         loading=false;
       }   
 
@@ -558,6 +558,11 @@ async function confirmAdd(key) {
 
     let json = await localforage.getItem(key); // 
     const mealItem = JSON.parse(json);
+
+    if (mealItem.calDates && mealItem.calDates.includes(selectedDate)) { //if the meal is already planned for the selected date}
+        window.alert("THis meal is already planned for " + selectedDate);
+        return;
+    }
 
     if (mealItem.calDates) { //if the json object has a calendar date array, add the date to it. 
         mealItem.calDates.push(selectedDate);
