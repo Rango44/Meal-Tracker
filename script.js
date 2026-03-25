@@ -167,15 +167,18 @@ function URLUI()  {
                 label.onclick = function() {let url = urlInput.value;
                      if(url) window.open(url)};
                 label.innerHTML = '🔎'
+                label.style.cursor = 'pointer'
 
             if (urlInput.value === '') {
                 paste.classList.add('d-none')
                 label.innerHTML = 'Video URL:'
+                label.style.cursor = 'default'
             }
 
             } else {
                 paste.classList.add('d-none')
                 label.innerHTML = 'Video URL:'
+                label.style.cursor = 'default'
             }
 }
     //Paste button visibility control and URL click fucntionality
@@ -209,6 +212,7 @@ function resetForm() {
         imageURL=''
         paste.classList.add('d-none')
         label.innerHTML = 'Video URL:'
+        label.style.cursor = 'default'
 }
 
 function removeImg() {
