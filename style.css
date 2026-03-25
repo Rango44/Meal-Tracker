@@ -115,3 +115,21 @@ object-fit: fill;
     color: inherit; /* Forces calendar to use the normal text color (black/gray) */
     text-decoration: none; /* Removes the underline */
 }
+
+[data-bs-theme="dark"] {
+
+  --bs-tertiary-bg-rgb: 18, 18, 18;
+  
+}
+
+[data-bs-theme="dark"] .btn-primary,
+[data-bs-theme="dark"] .nav-btn {
+--bs-btn-active-bg:#06e724;
+--bs-btn-bg: #02a818;
+}
+
+[data-bs-theme="light"] {
+
+  --bs-tertiary-bg-rgb: 3, 232, 252
+
+}

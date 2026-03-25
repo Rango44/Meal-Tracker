@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
 <head>
      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
      <link rel="stylesheet" type="text/css" href="https://cdn.curator.io/6.0/curator.embed.css" />
@@ -16,7 +17,7 @@
 
 <div class="sticky-top">
 <h1 
-     class="container-fluid bg-info display-4 border-bottom border-2 border-black mb-0"> Meal tracker 
+     class="container-fluid bg-body-tertiary display-4 border-bottom border-2 border-black mb-0"> Meal tracker 
      <small class="text-muted float-end" style="font-size: 35%"> Demo by Harvey Bosworth</small>
 </h1>
 
@@ -235,7 +236,7 @@
 
      <label class="form-check-label my-auto" for="darkmodebtn">Dark mode</label>
      <div class="form-check form-switch">
-      <input class="form-check-input" style="min-width: 100px; min-height: 30px;" type="checkbox" role="switch" id="darkmodebtn" value="dark mode"/>
+      <input class="form-check-input" style="min-width: 100px; min-height: 30px;" type="checkbox" role="switch" id="darkmodebtn" value="dark mode" onclick="theme()"/>
      
      </div>
 </div>
@@ -280,7 +281,7 @@
 <br>
 <nav class="nav navbar"> 
 
-<div class="container-fluid navbar-footer fixed-bottom bg-info mb-4 px-4 py-1 rounded-pill col-md-6 col-lg-4 col-11" id="navbuttons">
+<div class="container-fluid navbar-footer fixed-bottom bg-body-tertiary mb-4 px-4 py-1 rounded-4 col-md-6 col-lg-4 col-11" id="navbuttons">
      <input class ="btn nav-btn btn-lg active" role="button" aria-pressed="true" type ="button" id="homebtn" value="🏠" onclick="togglePages('homePage', 'homebtn')" />
      <input class ="btn nav-btn btn-lg" role="button" aria-pressed="true" type ="button" id="mealpagebtn" value="🍕" onclick="togglePages('mealsPage', 'mealpagebtn')" />  
      <input class ="btn nav-btn btn-lg" role="button" aria-pressed="true" type ="button" id="calendarbtn" value="📆" onclick="togglePages('calendarPage', 'calendarbtn')" />  
@@ -346,3 +347,4 @@ e=d.getElementsByTagName(s)[0];e.parentNode.insertBefore(i, e);
 <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script> <!-- localforage (increased storage)-->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>  <!-- calendar-->
 <script src="script.js"></script>
+</html>

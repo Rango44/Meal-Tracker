@@ -7,13 +7,16 @@
 
 const urlInput = document.getElementById('URL');
 const paste = document.getElementById('paste');
-const label = document.getElementById('URLlabel')
+const label = document.getElementById('URLlabel');
 
-function save() {
-
+//sets theme at startup
+if (localStorage.getItem('theme') === 'dark') { 
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+    document.getElementById('darkmodebtn').checked = true
+} else {
+    document.documentElement.setAttribute('data-bs-theme', 'light');
+    document.getElementById('darkmodebtn').checked = false
 }
-
-
 
 function togglePages(page, btn) {
     const pages = document.querySelectorAll('.pageview'); //selects all elements with class 'pageview'
@@ -158,7 +161,7 @@ const form = document.querySelector('form'); //selects the form
 
 function URLUI()  {
 
-    if (urlInput.value.includes('https://')){ //if it starts with https
+    if (urlInput.value.includes('https://')){ //if the URL field starts with https
                 paste.classList.remove('d-none') // show paste button
 
                 label.onclick = function() {let url = urlInput.value;
@@ -175,8 +178,8 @@ function URLUI()  {
                 label.innerHTML = 'Video URL:'
             }
 }
-        //Create meal page - paste button visibility control and URL click fucntionality
-       urlInput.addEventListener('input', URLUI);// runs when theres an input in the URL input box
+    //Paste button visibility control and URL click fucntionality
+    urlInput.addEventListener('input', URLUI);// runs when theres an input in the URL input box
 
             
 
@@ -389,7 +392,7 @@ async function mealModal(key) {
             <p>${mealItem.calories ? mealItem.calories + ' calories' : ''}  </p> <!--if calories exists, end with calories, else display ntohing -->
             <p class="text-break"style="white-space: pre-wrap; text-wrap: wrap">${mealItem.instructions}</p> <!-- linebreaks included-->
             <p>Category: ${mealItem.category}</p>
-            <p>${mealItem.URL ? 'URL: ' + mealItem.URL : ''} </p> <!--if URL exists, display with URL, else display ntohing --></p>
+            
             
             
            <div class="pt-4 d-flex mx-auto justify-content-center align-items-center col-12">
@@ -401,8 +404,8 @@ async function mealModal(key) {
     `
 
     footer.innerHTML = `
-        <button type="button" class="btn btn-secondary" onclick="editItem('${key}')">Edit</button>
-        <button type="button" class="btn btn-danger" onclick="deleteItem('${key}')">Delete</button>
+        <button type="button" class="btn btn-secondary py-2" onclick="editItem('${key}')">Edit</button>
+        <button type="button" class="btn btn-danger py-2" onclick="deleteItem('${key}')">Delete</button>
     `
 
 
@@ -691,9 +694,15 @@ async function importData() {
 
     reader.addEventListener("load", async () => { // runs when the file gets read from readastext
     //console.log(reader.result);
+    try {
     const data = JSON.parse(reader.result);
     //console.log(reader.result);
 
+    for (const key in data) {
+    if (data[key].mealname.includes('undefined'))  { //if theres an undefined name. this appears when wrong json data is imported.
+        return;
+        }
+    } 
 
     for (const key in data) {
         const json = JSON.stringify(data[key]) //get data for eaach item and convert to json string for saving
@@ -701,16 +710,20 @@ async function importData() {
         names += data[key].mealname + ',  '; //accumulate imported names
     }
 
-    if (names.includes('undefined'))  { //if theres an undefined name. this appears when wrong json data is imported.
-        window.alert("Invalid data detected. Please select a JSON file exported from this app... (meal-tracker-data.json)");
-    } else {
-    window.alert("Successfully imported : " + names);
+        window.alert("Successfully imported : " + names);
+    
     }
+    catch (error) {
+        window.alert("Invalid data detected. Please select a JSON file exported from this app... (meal-tracker-data.json)\n\n" + error);
+        names = ''; //reset for next fucntion run
+        input.value = ''; //reset so another file can be imported
+        return;
+    }
+    });
+    
+    
     names = ''; //reset for next fucntion run
     input.value = ''; //reset so another file can be imported
-
-    });
-
     reader.readAsText(file); //reads file and then runs the above ^
     
     }
@@ -725,8 +738,9 @@ let output = document.getElementById('instructions'); //text area on create meal
 
 document.getElementById('loadingindicator').classList.remove('d-none') //show loading
     
-    let request = await fetch ('https://api.microlink.io?url=' + urlInput.value);
+    let request = await fetch ('https://api.microlink.io?url=' + (urlInput.value));
     let response = await request.json();
+
 
     if (urlInput.value.includes ('instagram')) {
         text = "Do you want to paste the description from the Insagram video?";
@@ -747,6 +761,25 @@ document.getElementById('loadingindicator').classList.remove('d-none') //show lo
         }
     }
 
+    else if (urlInput.value.includes ('youtube') || urlInput.value.includes('youtu.be')) {
+        text = "Do you want to paste the description from the Youtube video?";
+
+        if (confirm(text) === true) {
+
+            //YOUTUBE API METHOD
+            let regex = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/; //video ID extractor magic 
+            let match = urlInput.value.match(regex);
+            let videoID = match[1];
+            let api = 'AIzaSyBV4CA9WeZ5UWG1wSpoEPKcHf49heYFRlg'; //this probably isn't good practice but it works
+
+            let ytRequest = await fetch ('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoID + '&key=' + api);
+            let ytResponse = await ytRequest.json();
+
+            finalDescription= ytResponse.items[0].snippet.description
+        }
+        
+    }
+
 
     else { window.alert ('Unkown source: please check your URL and only use videos from Youtube, TikTok, or Instagram.'); 
         document.getElementById('loadingindicator').classList.add('d-none') //hide loading
@@ -756,4 +789,17 @@ document.getElementById('loadingindicator').classList.remove('d-none') //show lo
     console.log(response)
 
     document.getElementById('loadingindicator').classList.add('d-none')
+}
+
+
+
+function theme() {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+        document.documentElement.setAttribute('data-bs-theme','light')
+        localStorage.setItem('theme', 'light');
+    } else {
+        document.documentElement.setAttribute('data-bs-theme','dark')
+        localStorage.setItem('theme', 'dark');
     }
+    
+}
