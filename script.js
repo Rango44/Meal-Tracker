@@ -465,6 +465,11 @@ loading=true;
         
         
         modalInstance.show();
+
+         if (container.innerHTML === '') {
+            container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
+        }
+
         
         loading=false;
       }   
