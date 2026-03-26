@@ -41,10 +41,9 @@ function togglePages(page, btn) {
 
     if (page === 'calendarPage') {
 
-        if (loading === true) {return}
-
-        loading=true;
         onCal=true;
+        if (loading === true) {return}
+        loading=true;
         loadMeals(); // load meals, ensures the information is always updated when viewing
         initCal();
         loading=null;
@@ -108,12 +107,11 @@ const form = document.querySelector('form'); //selects the form
             return;
         }
 
-        if (imageURL !== '') {
+        if (imageURL !== '') { // if an image exists, show it
 
             mealItem.mealimage = imageURL;
-        }
-        else {
-            delete mealItem.mealimage // clear empty object if no iamge is uplaoded so we can verify if there actually is an image or not
+        } else {
+            delete mealItem.mealimage // delete field from object if no image is uplaoded so we can verify if there actually is an image or not, stops the empty image icon from appearing
         }
 
 
@@ -154,6 +152,7 @@ const form = document.querySelector('form'); //selects the form
     
         //console.log(mealItem);
         
+        removeImg();
         form.reset();
         
 
@@ -192,14 +191,23 @@ document.querySelector("#mealimage").addEventListener("change", function () { //
 
             const fr = new FileReader();
             
-            fr.addEventListener("load", () => {
+
+            if (this.files[0].type.startsWith('image/')) { // if the uplaoded file is actually an image
+                fr.addEventListener("load", () => {
                 console.log(fr.result);
                 imageURL = fr.result;
                 document.getElementById("preview").src = fr.result;
                 document.getElementById("preview").style.display = 'block';
 
-});
-                fr.readAsDataURL(this.files[0]);
+            });
+                fr.readAsDataURL(this.files[0]); 
+
+            } else {
+                window.alert("Please choose a or take a picture");
+
+            }
+            
+            
             
         });
         
@@ -242,12 +250,14 @@ let container2 = document.getElementById('lunch');
 let container3 = document.getElementById('dinner');
 let container4 = document.getElementById('baking/dessert');
 let container5 = document.getElementById('recentlymademeals');
+let container6 = document.getElementById('snack');
 
 container.innerHTML='';
 container2.innerHTML='';
 container3.innerHTML='';
 container4.innerHTML='';
 container5.innerHTML='';
+container6.innerHTML='';
 
 let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
 
@@ -291,6 +301,12 @@ let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
                 container4.innerHTML += createCard(mealItem, key);
                 container5.innerHTML += createCard(mealItem, key);
             }
+
+            else if (mealItem.category === 'snack') {
+               
+                container6.innerHTML += createCard(mealItem, key);
+                container5.innerHTML += createCard(mealItem, key);
+            }
             
         };
 
@@ -311,6 +327,9 @@ let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
     if (container5.innerHTML === '') {
         container5.innerHTML = emptyMsg;
     } 
+    if (container6.innerHTML === '') {
+        container6.innerHTML = emptyMsg;
+    } 
 
     loading = null; //loading finished
     document.getElementById('loadingindicator').classList.add('d-none') //hide loading
@@ -324,6 +343,7 @@ function createCard(mealItem, key, date) {
 
 let addBtn = ' ';
 let removeBtn = ' ';
+let quantity = '';
 
 if (addingItem === true) {
     addBtn= `<input type="button" class="btn btn-success" value=" Add " onclick="confirmAdd('${key}')"></input>` // add button for when adding a meal to the calendar
@@ -332,6 +352,7 @@ if (addingItem === true) {
 
 if (onCal === true) {
     removeBtn= `<input type="button" class="btn btn-danger" value="Remove" onclick="dateRemove('${key}', '${date}')"></input>` // add button for when removing a meal from the calendar
+    /* quantity = `<input type="number" class="form-control float-end" id="quantity" name="quantity" value="1" min="1" style="width:45px">` */
 }
 
 
@@ -607,7 +628,7 @@ async function confirmAdd(key) {
     const mealItem = JSON.parse(json);
 
     if (mealItem.calDates && mealItem.calDates.includes(selectedDate)) { //if the meal is already planned for the selected date}
-        window.alert("THis meal is already planned for " + selectedDate);
+        window.alert("This meal is already planned for " + selectedDate);
         return;
     }
 
