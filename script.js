@@ -1,10 +1,12 @@
- let mealKey = null;
- let addingItem = null;
- let selectedDate = null;
- let onCal = null; 
- let prevModal = null; 
- let loading = null;
+ 
+ let mealKey = null; // used to store the key of meal, needed for edit 
+ let addingItem = null; // used to determine if an item is being added to the calendar, makes add button visible on cards
+ let selectedDate = null; // stores the selected date so it can be used in the confirmAdd function
+ let onCal = null; // used to determine if the user is on the calendar page. makes remove button visible on cards if true
+ let prevModal = null; // stores the previous modal so the back button can be used to return to it.
+ let loading = null; //used to prevent fucntions from running before they're finished
 
+ 
 const urlInput = document.getElementById('URL');
 const paste = document.getElementById('paste');
 const label = document.getElementById('URLlabel');
@@ -29,7 +31,7 @@ function togglePages(page, btn) {
     if (btn !== undefined) { // if one of the nav bar buttons are pressed
         
         document.getElementById(btn).classList.add('active'); // adds 'active' class to selected nav button
-    } else { // if the page changes from a button other than the nav button, find out what page it is and activate the right nav btn.
+    } else { // if the page changes from a function (nav button not pressed), find out what page it is and activate the right nav btn.
         if (page === 'calendarPage') {
             document.getElementById('calendarbtn').classList.add('active')
         }
@@ -107,8 +109,7 @@ const form = document.querySelector('form'); //selects the form
             return;
         }
 
-        if (imageURL !== '') { // if an image exists, show it
-
+        if (imageURL !== '') { // if an image is added or exists, show it
             mealItem.mealimage = imageURL;
         } else {
             delete mealItem.mealimage // delete field from object if no image is uplaoded so we can verify if there actually is an image or not, stops the empty image icon from appearing
@@ -132,15 +133,14 @@ const form = document.querySelector('form'); //selects the form
             try {
             await localforage.setItem(mealKey, json); // replaces the json for existing item 
             document.getElementById('submit').value = 'Confirm'; // changes button text after we're done editing
-            mealKey = null; // resets mealKey
-
-
+            mealKey = null; // resets mealKey because we're not editing an item anymore
             togglePages('mealsPage')
-            } catch (error) {
+
+            } catch (error) { //if there's an error when editing
                 window.alert(error);
             }
 
-        } else { try {
+        } else { try { // if we're adding a new item (not editing an existing item)
 
             await localforage.setItem('mealItem_' + Date.now(), json); // sets title of json data to 'mealItem_' + date. contains form data
             } catch (error) {
@@ -148,7 +148,7 @@ const form = document.querySelector('form'); //selects the form
             }
         }
 
-        imageURL=''; // needed to avoid image being saved multiple times
+        imageURL=''; // clear image, needed to avoid image being saved multiple times
     
         //console.log(mealItem);
         
@@ -161,24 +161,25 @@ const form = document.querySelector('form'); //selects the form
 function URLUI()  {
 
     if (urlInput.value.includes('https://')){ //if the URL field starts with https
-                paste.classList.remove('d-none') // show paste button
+        paste.classList.remove('d-none') // show paste button
+        label.innerHTML = '🔎' 
+        label.style.cursor = 'pointer'
 
-                label.onclick = function() {let url = urlInput.value;
-                     if(url) window.open(url)};
-                label.innerHTML = '🔎'
-                label.style.cursor = 'pointer'
+        label.onclick = function() { //when your press the URL label
+        let url = urlInput.value;
+        if(url) window.open(url)}; // open URL
 
-            if (urlInput.value === '') {
-                paste.classList.add('d-none')
-                label.innerHTML = 'Video URL:'
-                label.style.cursor = 'default'
-            }
+        if (urlInput.value === '') { 
+            paste.classList.add('d-none')
+            label.innerHTML = 'Video URL:'
+            label.style.cursor = 'default'
+        }
 
-            } else {
-                paste.classList.add('d-none')
-                label.innerHTML = 'Video URL:'
-                label.style.cursor = 'default'
-            }
+        } else {
+            paste.classList.add('d-none')
+            label.innerHTML = 'Video URL:'
+            label.style.cursor = 'default'
+        }
 }
     //Paste button visibility control and URL click fucntionality
     urlInput.addEventListener('input', URLUI);// runs when theres an input in the URL input box
@@ -194,7 +195,7 @@ document.querySelector("#mealimage").addEventListener("change", function () { //
 
             if (this.files[0].type.startsWith('image/')) { // if the uplaoded file is actually an image
                 fr.addEventListener("load", () => {
-                console.log(fr.result);
+                //console.log(fr.result);
                 imageURL = fr.result;
                 document.getElementById("preview").src = fr.result;
                 document.getElementById("preview").style.display = 'block';
@@ -214,12 +215,12 @@ document.querySelector("#mealimage").addEventListener("change", function () { //
 
 function resetForm() {
     form.reset(); // reset form values after leaving the form 
-        document.getElementById('submit').value = 'Confirm'; // wont be 'updating' anything, just confirm
+        document.getElementById('submit').value = 'Confirm'; //ensures button is 'confirm', not 'update' 
         document.getElementById('preview').src = ''; //preview image is cleared
         document.getElementById('preview').style.display = 'none';
         imageURL=''
-        paste.classList.add('d-none')
-        label.innerHTML = 'Video URL:'
+        paste.classList.add('d-none') // ensure paste button is hidden
+        label.innerHTML = 'Video URL:' //URL label back to normal
         label.style.cursor = 'default'
 }
 
@@ -238,9 +239,7 @@ function deleteImg(){
 
 async function loadMeals() {
 
-
-
-if (loading === true) {return} // don't run fucntion if it's still loading, prevents cards getting duplicated when navigating the app quickly.
+if (loading === true) {return} //prevents cards getting duplicated when navigating the app quickly.
 
 loading = true;
 document.getElementById('loadingindicator').classList.remove('d-none') //show loading
@@ -262,53 +261,49 @@ container6.innerHTML='';
 let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
 
 
-        const keys = (await localforage.keys()) //gets all keys from local storage
-    .filter(key => key.startsWith('mealItem_')) //only picks up data that starts with 'mealItem_'
+    const keys = (await localforage.keys()) //gets all keys from local storage
+
     const sortedkeys = keys.sort((a, b) => { //sorts using 2 parameters
-        const timeA = parseInt(a.split("_")[1]); // select date part of key
-        const timeB = parseInt(b.split("_")[1]); // select date part of key
-        return timeB - timeA; //newest order first
-        
+    const timeA = parseInt(a.split("_")[1]); // select date part of a key
+    const timeB = parseInt(b.split("_")[1]); // select date part of another key
+        return timeB - timeA; //newest first. displays as last in, first out
         });
+
 // sortedkeys.forEach(key => {    // way to get data from local storage (olddddddddd)
 
-    for (const key of sortedkeys) {
-            const json = await localforage.getItem(key);
-            const mealItem = JSON.parse(json);
+    for (const key of sortedkeys) { //for every key
+        const json = await localforage.getItem(key); //get the data
+        const mealItem = JSON.parse(json); //parse the data
 
-           
+        //create meal card in recently made and category containers
+        if (mealItem.category === 'breakfast') {
+            container.innerHTML += createCard(mealItem, key);
+            container5.innerHTML += createCard(mealItem, key);
+        }
 
-            if (mealItem.category === 'breakfast') {
-                
-                container.innerHTML += createCard(mealItem, key);
-                container5.innerHTML += createCard(mealItem, key);
-            }
+        else if (mealItem.category === 'lunch') {
+            container2.innerHTML += createCard(mealItem, key);
+            container5.innerHTML += createCard(mealItem, key);
+        }
 
-            else if (mealItem.category === 'lunch') {
-                
-                container2.innerHTML += createCard(mealItem, key);
-                container5.innerHTML += createCard(mealItem, key);
-            }
+        else if (mealItem.category === 'dinner') {   
+            container3.innerHTML += createCard(mealItem, key);
+            container5.innerHTML += createCard(mealItem, key);
+        }
 
-            else if (mealItem.category === 'dinner') {
-                
-                container3.innerHTML += createCard(mealItem, key);
-                container5.innerHTML += createCard(mealItem, key);
-            }
+        else if (mealItem.category === 'baking/dessert') {  
+            container4.innerHTML += createCard(mealItem, key);
+            container5.innerHTML += createCard(mealItem, key);
+        }
 
-            else if (mealItem.category === 'baking/dessert') {
-               
-                container4.innerHTML += createCard(mealItem, key);
-                container5.innerHTML += createCard(mealItem, key);
-            }
-
-            else if (mealItem.category === 'snack') {
-               
-                container6.innerHTML += createCard(mealItem, key);
-                container5.innerHTML += createCard(mealItem, key);
-            }
+        else if (mealItem.category === 'snack') { 
+            container6.innerHTML += createCard(mealItem, key);
+            container5.innerHTML += createCard(mealItem, key);
+        }
             
         };
+
+    //place holder messages if no cards are in a container
 
     if (container.innerHTML === '') {
         container.innerHTML = emptyMsg;
@@ -335,15 +330,10 @@ let emptyMsg = `<p class="text-muted fs-6">Nothing here yet... </p>`;
     document.getElementById('loadingindicator').classList.add('d-none') //hide loading
 } 
     
-
-    
-
-
-function createCard(mealItem, key, date) {
+function createCard(mealItem, key, date) { 
 
 let addBtn = ' ';
 let removeBtn = ' ';
-let quantity = '';
 
 if (addingItem === true) {
     addBtn= `<input type="button" class="btn btn-success" value=" Add " onclick="confirmAdd('${key}')"></input>` // add button for when adding a meal to the calendar
@@ -355,15 +345,14 @@ if (onCal === true) {
     /* quantity = `<input type="number" class="form-control float-end" id="quantity" name="quantity" value="1" min="1" style="width:45px">` */
 }
 
-
     return `
 
-  <div class="card ms-2 mb-3 me-3" style="min-width: 339px; max-width: 339px; height: 180px">
+  <div class="card ms-2 mb-3 me-3" style="min-width: 319px; max-width: 319px; height: 180px">
   <div class="row g-0 h-100">
     
     <div class="col-7 h-100">
       <div class="card-body">
-        <h5 class="card-title text-truncate fs-4 pb-1">${mealItem.mealname}</h5>
+        <h5 class="card-title text-truncate fs-5 pb-1">${mealItem.mealname}</h5>
         <p class="card-text">${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
             ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing --></p>
 
@@ -384,17 +373,14 @@ if (onCal === true) {
     
   </div>
 </div>
-
-            
-            
-        `
+`
 
 }
 
 
 
 async function mealModal(key) {
-    const json = await localforage.getItem(key); // 
+    const json = await localforage.getItem(key);  
     const mealItem = JSON.parse(json);
     
     let header = document.getElementById('mealModalHeader');
@@ -402,7 +388,7 @@ async function mealModal(key) {
     let footer = document.getElementById('mealModal-footer');
     let closeBtn = `<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>` //normal close button
 
-    if (prevModal !== null) { // close button is a back button so we return to calerdar modal
+    if (prevModal !== null) { // close button is a back button so we return to calendar modal
         closeBtn = `<button type="button" class="close" data-bs-toggle="modal" data-bs-target="#calendarModal" aria-label="Close"> <span aria-hidden="true">&larr;</span> </button>`
     }
     
@@ -437,76 +423,73 @@ async function mealModal(key) {
 }
 
 
- async function openDate(date) { // runs when you click on a date on the calendar
+async function openDate(date) { // runs when you click on a date on the calendar
 
 if (loading === true) {return}
+
 loading=true;
 
-        let title = document.getElementById('calModalTitle');
-        let container = document.getElementById('calModalBody');
-        let footer = document.getElementById('calModal-footer');
-        let totalCal = 0;
-        let totalCost = 0;
+    let title = document.getElementById('calModalTitle');
+    let container = document.getElementById('calModalBody');
+    let footer = document.getElementById('calModal-footer');
+    let totalCal = 0;
+    let totalCost = 0;
 
-        const [year, month, day] = date.split('-'); // sepearte date parts separated by hyphens for formatting
-        const tempDate = new Date(year, month - 1, day); //creates a JS date thing so we can format it. -1 month because months are counted 0-11
-        
-        const options = { // for date formatting 
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        };
+    //date formatting
+    const [year, month, day] = date.split('-'); // seperate date parts separated by hyphens for formatting
+    const tempDate = new Date(year, month - 1, day); //creates a JS date thing so we can format it. -1 month because months are counted 0-11
+    
+    const options = { 
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    };
 
-        formatDate = tempDate.toLocaleDateString('en-UK', options); //formats date
-        
-        container.innerHTML = '';
-        const keys = (await localforage.keys()) //gets all keys from local storage
-        .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
-        for (const key of keys) { // get all meals
-        const json = await localforage.getItem(key);
-        const mealItem = JSON.parse(json);
-        
-        
-        if (mealItem.calDates && mealItem.calDates.includes(date)) { // if an item has a cal date array that has the selected date in the index
-            container.innerHTML += createCard(mealItem, key, date); // display meal card if its planned for the selected date
-            totalCal += Number (mealItem.calories)
-            totalCost += Number (mealItem.cost)
-        }
+    formatDate = tempDate.toLocaleDateString('en-UK', options); //formats date
+    
+    container.innerHTML = ''; //clears container before re writing, prevents item duplication
+    const keys = (await localforage.keys()) //gets all keys from local storage
+
+    for (const key of keys) { // get all meals
+    const json = await localforage.getItem(key);
+    const mealItem = JSON.parse(json);
+    
+    
+    if (mealItem.calDates && mealItem.calDates.includes(date)) { // if an item has a cal date array that has the selected date in the index
+        container.innerHTML += createCard(mealItem, key, date); // display meal card if its planned for the selected date
+        totalCal += Number (mealItem.calories)
+        totalCost += Number (mealItem.cost)
     }
-        
-         
-        title.innerHTML= `${formatDate}`
-        let stats = `<div> </div>  `; // creates empty space so add button is on the right if nothing is planned
-        if (container.innerHTML !== '') { //if there's meals planned for the day, show stats
-            stats = ` <div> <strong>Total calories: </strong> ${totalCal} <br> <strong> Total cost: </strong> £${totalCost.toFixed(2)}</div>`
-                    
-        }
-        footer.innerHTML = 
-        `
-        ${stats}
-        <button type="button" class="btn btn-primary " onclick="addItem('${date}')">Add</button>
-        `
-        let modal = (document.getElementById('calendarModal'));
-        let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the open modal
-        prevModal = modalInstance; //save modal so we can rturn to it
-        
-        
-        modalInstance.show();
+}
+    
+     
+    title.innerHTML= `${formatDate}`
+    let stats = `<div> </div>  `; // creates empty space so add button is on the right if nothing is planned
+    if (container.innerHTML !== '') { //if there's meals planned for the day, show stats
+        stats = ` <div> <strong>Total calories: </strong> ${totalCal} <br> <strong> Total cost: </strong> £${totalCost.toFixed(2)}</div>`            
+    }
 
-         if (container.innerHTML === '') {
-            container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
-        }
+    footer.innerHTML = `${stats}<button type="button" class="btn btn-primary " onclick="addItem('${date}')">Add</button>`
 
-        
-        loading=false;
-      }   
+    let modal = (document.getElementById('calendarModal'));
+    let modalInstance = bootstrap.Modal.getOrCreateInstance(modal); // get the calendar modal
+    prevModal = modalInstance; //remember the modal so we can return to it if we want
+    
+    modalInstance.show(); // calendar modal appears
+
+     if (container.innerHTML === '') {
+        container.innerHTML = `<p class="text-muted fs-6"> Nothing planned for today, yet... </p>`
+    }
+
+    
+    loading=false;
+  }   
 
 async function initCal(){
     let events = []; // for calendar
 
     const keys = (await localforage.keys()) //gets all keys from local storage
-    .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
 
     for (const key of keys) { // get all meals
     const json = await localforage.getItem(key);
@@ -514,7 +497,7 @@ async function initCal(){
 
         if (mealItem.calDates) { // if a meal has a planned date
             mealItem.calDates.forEach(date => { // add event to calendar for every date the meal is planned for
-                events.push({
+                events.push({ //highlight background of dates that have plans
                     start: date,
                     display: 'background',
                     })
@@ -526,30 +509,26 @@ async function initCal(){
     var calendarEl = document.getElementById('calendar');
     calendarEl.innerHTML = ''; // clear calendar before re writing so it doesn't secretly duplicate
     var calendar = new FullCalendar.Calendar(calendarEl, {
-    
-          initialView: 'dayGridMonth' ,
-          height: '100%',
-          aspectRatio: 1,
-          events: events,
-          headerToolbar: {
-               left: 'title',
-               right: 'prev,next',
-            },
-            dateClick: function(info) {
-                openDate(info.dateStr)
-            },
-
-
-        });
-
-
-        calendar.render();
-      };
+    // Calendar layout options
+      initialView: 'dayGridMonth',
+      height: '100%',
+      aspectRatio: 1,
+      events: events,
+      headerToolbar: {
+           left: 'title',
+           right: 'prev,next',
+        },
+        dateClick: function(info) {
+            openDate(info.dateStr)
+        },
+    });
+    calendar.render();
+  };
 
 function deleteItem(key) {
 
     let modal = document.getElementById('mealModal');
-    let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal 
+    let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal so we can hide it later
 
     let text = "Are you sure you want to delete this item?"
 
@@ -567,8 +546,7 @@ function deleteItem(key) {
 
 async function editItem(key) {
 
-
-    mealKey = key
+    mealKey = key // stores key of meal so the form knows we're editing that item 
 
     const json = await localforage.getItem(key);
     const mealItem = JSON.parse(json);
@@ -586,53 +564,45 @@ async function editItem(key) {
     
     const preview = document.getElementById('preview');
 
-    if (mealItem.mealimage) {
+    if (mealItem.mealimage) { // if the item we're editing has an image, show it
         preview.src = mealItem.mealimage
         preview.style.display = 'block';
-        imageURL = mealItem.mealimage // save existing iamge to varaible so it stays on the card
+        imageURL = mealItem.mealimage // save existing or new image to varaible so it is retained after editing other values.
 
-    } else {
-        preview.src = '';
-        preview.style.display = 'none';
+    } else { //if there's not an image, hide the empty image icon
+        removeImg() 
     }
-    
     
     modalInstance.hide()
     
     togglePages('createmealPage')
     
-
-    
 }
 
 function addItem(date) {
+ 
+ let modal = document.getElementById('calendarModal');
+ let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal
+ togglePages('viewallmealsPage')
+ modalInstance.hide()
+ addingItem=true;
+ selectedDate = date;
 
-    
-    let modal = document.getElementById('calendarModal');
-    let modalInstance = bootstrap.Modal.getInstance(modal); // get the open modal
-
-    togglePages('viewallmealsPage')
-
-    modalInstance.hide()
-    addingItem=true;
-    selectedDate = date;
-
-    
 }
 
-async function confirmAdd(key) {
+async function confirmAdd(key) { 
 
     const container = document.getElementById('calModalBody');
 
-    let json = await localforage.getItem(key); // 
+    let json = await localforage.getItem(key);
     const mealItem = JSON.parse(json);
 
-    if (mealItem.calDates && mealItem.calDates.includes(selectedDate)) { //if the meal is already planned for the selected date}
+    if (mealItem.calDates && mealItem.calDates.includes(selectedDate)) { //if the meal is already planned for the selected date
         window.alert("This meal is already planned for " + selectedDate);
         return;
     }
 
-    if (mealItem.calDates) { //if the json object has a calendar date array, add the date to it. 
+    if (mealItem.calDates) { //if the item has a calendar date array, add the date to the array. 
         mealItem.calDates.push(selectedDate);
     } else { // if array doesnt exist, make the array and then add to it. Stores date(s) a meal is planned for in the calendar.
         mealItem.calDates = []; 
@@ -661,7 +631,7 @@ async function dateRemove(key, date) {
     await localforage.setItem(key, json); 
 
     openDate(date); // refresh modal
-    initCal(); // refresh refresh calendar
+    initCal(); // refresh calendar
 }
     
 async function clearData() {
@@ -683,14 +653,14 @@ async function exportData() {
     let data
 
     const keys = (await localforage.keys()) //gets all keys from local storage
-            .filter(key => key.startsWith('mealItem_')); //only picks up data that starts with 'mealItem_'
-
             for (const key of keys) { // get all meals
             const json = await localforage.getItem(key);
-            everything[key]= JSON.parse(json); // parse each item to the JS object with the key/title 
+            everything[key]= JSON.parse(json); // parse each item to the 'everything' JS object
     }
     data = JSON.stringify(everything, null, 2); // convert object to json string for exporting, separates each line with line breaks
 
+
+    //file
     let a = document.createElement("a");
     let file = new Blob([data], {type: "application/json" });
     a.href = URL.createObjectURL(file);
@@ -700,15 +670,12 @@ async function exportData() {
 }
 
 async function importData() {
-    
     const input = document.getElementById('importInput');
-
     input.onchange = read;// runs when a file is selected 
-
     function read() {
         const file = input.files[0]; //get file from import input
 
-        if (file.type !== "application/json") { //if the file isn't json, halt and notify
+        if (file.type !== "application/json" || !file.name.includes("meal-tracker-data"))  { //if the file isn't json from this app, halt and notify
         window.alert("Select a JSON file exported from this app... (meal-tracker-data.json)");
         input.value = '';
         return;
@@ -717,20 +684,21 @@ async function importData() {
     const reader = new FileReader();
     let names = ''
 
-    reader.addEventListener("load", async () => { // runs when the file gets read from readastext
+    reader.addEventListener("load", async () => { // runs when the file gets read from readastext at bottom of function
     //console.log(reader.result);
     try {
     const data = JSON.parse(reader.result);
     //console.log(reader.result);
 
     for (const key in data) {
-    if (data[key].mealname.includes('undefined'))  { //if theres an undefined name. this appears when wrong json data is imported.
-        return;
+    if (data[key].mealname.includes('undefined') || !key.includes('mealItem') || !data[key].category.includes ('breakfast') && !data[key].category.includes ('lunch') && !data[key].category.includes ('dinner') && !data[key].category.includes ('baking/dessert') && !data[key].category.includes ('snack'))  { //if theres an undefined name or key in wrong format or category that doesn't match the app. this appears when wrong json data is imported.
+        window.alert("Invalid data detected. Please select a JSON file exported from this app... (meal-tracker-data.json)");
+        return; // nothing is imported 
         }
     } 
 
     for (const key in data) {
-        const json = JSON.stringify(data[key]) //get data for eaach item and convert to json string for saving
+        const json = JSON.stringify(data[key]) //get data for each item and convert to json string for saving
         await localforage.setItem(key, json); // save item with extracted key and json data
         names += data[key].mealname + ',  '; //accumulate imported names
     }
@@ -747,14 +715,14 @@ async function importData() {
     });
     
     
-    names = ''; //reset for next fucntion run
+    names = ''; //reset for next function run
     input.value = ''; //reset so another file can be imported
     reader.readAsText(file); //reads file and then runs the above ^
     
     }
 }
 
-async function urlPaste() { //microlink api used
+async function urlPaste() { //description scraper
 let description = ''
 let cleanDescription = ''
 let finalDescription = ''
@@ -763,29 +731,77 @@ let output = document.getElementById('instructions'); //text area on create meal
 
 document.getElementById('loadingindicator').classList.remove('d-none') //show loading
     
-    let request = await fetch ('https://api.microlink.io?url=' + (urlInput.value));
-    let response = await request.json();
+    let request
+    let response
 
-
+// instagram apth
     if (urlInput.value.includes ('instagram')) {
         text = "Do you want to paste the description from the Insagram video?";
         
         if (confirm(text) === true) {
+            request = await fetch ('https://api.microlink.io?url=' + (urlInput.value));
+            response = await request.json();
+try {
             description = response.data.description;
             cleanDescription = description.split(':') // removes the unwanted instagram text at the start of description (left of colon)
             finalDescription = cleanDescription.slice(1).join(':').trim(); // shows the second part of array containing the real video description, includes other colons, gets rid of a space at the start the start of description.
-        } else {return}
-    }
+            output.value += '\nDescription captured from video:\n' +finalDescription + '\n'
+            console.log(response)
+        
+        } catch (error) {
+            window.alert ('Something went wrong, please try again.' + error);
+            document.getElementById('loadingindicator').classList.add('d-none') //hide loading
+            return}
+        }
+    }     
 
-
+//tiktok path
     else if (urlInput.value.includes ('tiktok')) {
         text = "Do you want to paste the description from the TikTok video?";
 
         if (confirm(text) === true) {
-            finalDescription = response.data.description
+            try {
+            request = await fetch ('https://api.microlink.io?url=' + (urlInput.value));
+            response = await request.json();
+            description = response.data.description;
+
+                if (description === 'TikTok PWA') { //This is the description output soemtimes, not sure why
+                    window.alert ('Please copy the Tiktok link and try again. It may take a few trys.');
+                    document.getElementById('loadingindicator').classList.add('d-none')
+                    console.log(response)
+                    return}
+
+            cleanDescription = description // this adds own line breaks before the characters below as line breaks not captured for TT
+                .split(' -').join('\n-')
+                .split(' •').join('\n•')
+                .split(' *').join('\n*')
+                .split(' :').join('\n:')
+                .split(' #').join('\n#')
+                .split(' 1').join('\n1')
+                .split(' 2').join('\n2')
+                .split(' 3').join('\n3')
+                .split(' 4').join('\n4')
+                .split(' 5').join('\n5')
+                .split(' 6').join('\n6')
+                .split(' 7').join('\n7')
+                .split(' 8').join('\n8')
+                .split(' 9').join('\n9')
+                .split(' 10').join('\n10')
+                .split(' 11').join('\n11')
+                .split(' 12').join('\n12');
+
+            finalDescription = cleanDescription
+            output.value += '\nDescription captured from video:\n' +finalDescription + '\n'
+            console.log(response)
+
+        } catch (error) {
+            window.alert ('Something went wrong, please try again.' + error);
+            document.getElementById('loadingindicator').classList.add('d-none') //hide loading
+            return}
         }
     }
-
+            
+//youtube path
     else if (urlInput.value.includes ('youtube') || urlInput.value.includes('youtu.be')) {
         text = "Do you want to paste the description from the Youtube video?";
 
@@ -797,12 +813,20 @@ document.getElementById('loadingindicator').classList.remove('d-none') //show lo
             let videoID = match[1];
             let api = 'AIzaSyBV4CA9WeZ5UWG1wSpoEPKcHf49heYFRlg'; //this probably isn't good practice but it works
 
+            try {
+            
             let ytRequest = await fetch ('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoID + '&key=' + api);
             let ytResponse = await ytRequest.json();
 
             finalDescription= ytResponse.items[0].snippet.description
+            output.value += '\nDescription captured from video:\n' +finalDescription + '\n'
+            console.log(ytResponse)
+            
+        } catch (error) {
+            window.alert ('Something went wrong, please try again.' + error);
+            document.getElementById('loadingindicator').classList.add('d-none') //hide loading
+            return}
         }
-        
     }
 
 
@@ -810,8 +834,8 @@ document.getElementById('loadingindicator').classList.remove('d-none') //show lo
         document.getElementById('loadingindicator').classList.add('d-none') //hide loading
         return}
 
-    output.value += '\nDescription captured from video:\n' +finalDescription + '\n'
-    console.log(response)
+    
+    
 
     document.getElementById('loadingindicator').classList.add('d-none')
 }
