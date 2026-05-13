@@ -109,7 +109,7 @@ const form = document.querySelector('form'); //selects the form
             return;
         }
 
-        if (imageURL !== '') { // if an image is added or exists, show it
+        if (imageURL !== '') { // if an image is added or exists, save it to the object
             mealItem.mealimage = imageURL;
         } else {
             delete mealItem.mealimage // delete field from object if no image is uplaoded so we can verify if there actually is an image or not, stops the empty image icon from appearing
@@ -194,7 +194,7 @@ document.querySelector("#mealimage").addEventListener("change", function () { //
             
 
             if (this.files[0].type.startsWith('image/')) { // if the uplaoded file is actually an image
-                fr.addEventListener("load", () => {
+                fr.addEventListener("load", () => { 
                 //console.log(fr.result);
                 imageURL = fr.result;
                 document.getElementById("preview").src = fr.result;
@@ -212,6 +212,7 @@ document.querySelector("#mealimage").addEventListener("change", function () { //
             
         });
         
+
 
 function resetForm() {
     form.reset(); // reset form values after leaving the form 
