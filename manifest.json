@@ -2,7 +2,7 @@
   "name": "Meal Tracker Pro",
   "short_name": "MealTracker",
   "description": "Save and plan your favorite social media recipes.",
-  "start_url": "/Meal-Tracker/index.html",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
