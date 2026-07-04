@@ -1,3 +1,23 @@
+body {
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.card-text {
+  font-weight: 400;
+}
+
+.card-title {
+  font-weight: 600;
+}
+
+.text-muted {
+  opacity: 0.6;
+
+}
+
+
 .nav-btn {
   --bs-btn-color: #000000;
   --bs-btn-bg: #07fabd;
@@ -26,7 +46,11 @@
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: #01cc1c;
   height: 42px;
+  font-weight: 600;
 }
+
+
+
 
 .btn-outline-primary {
   --bs-btn-active-bg: #01cc1c;
@@ -49,6 +73,7 @@
   --bs-btn-active-color: #fff;
   --bs-btn-active-border-color: #ffffff;
   height: 42px;
+  font-weight: 500;
 }
 
 .btn-secondary {
@@ -60,6 +85,7 @@
   --bs-btn-active-color: #fff;
   --bs-btn-active-border-color: #ffffff;
   height: 42px;
+  font-weight: 500;
 }
 
 .btn-danger {
@@ -69,7 +95,19 @@
   --bs-btn-hover-bg: #edf5f0;
   --bs-btn-hover-border-color: #000000;
   --bs-btn-active-color: #fff;
+font-weight: 500; 
+}
 
+.close {
+  background: transparent;
+    border: none;
+    font-weight: 900;
+    font-size : 20px;
+}
+
+.card {
+  --bs-card-bg: #fdf7f7;
+  --bs-card-border-color: #cccaca;
 }
 
 .switch-lg {
@@ -78,7 +116,6 @@
 
 #backarrow {
 width: 40px;
-height: auto;
 }
 
 #backbtn {
@@ -128,8 +165,18 @@ object-fit: fill;
 --bs-btn-bg: #02a818;
 }
 
+[data-bs-theme="dark"] .card {
+  --bs-card-bg: rgba(255, 255, 255, 0.08); /* Soft white glow */
+  --bs-card-border-color: rgba(255, 255, 255, 0.15);
+}
+
 [data-bs-theme="light"] {
 
   --bs-tertiary-bg-rgb: 3, 232, 252
+
+}
+
+#settingsPage button, #settingsPage label{
+  font-weight: 900;
 
 }

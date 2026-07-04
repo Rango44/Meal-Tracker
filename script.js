@@ -348,16 +348,17 @@ if (onCal === true) {
 
     return `
 
-  <div class="card ms-2 mb-3 me-3" style="min-width: 319px; max-width: 319px; height: 180px">
+  <div class="card ms-2 mb-3 me-3 border-3 rounded-2" style="min-width: 319px; max-width: 319px; height: 180px">
   <div class="row g-0 h-100">
     
     <div class="col-7 h-100">
-      <div class="card-body">
+      <div class="card-body rounded-start-1">
         <h5 class="card-title text-truncate fs-5 pb-1">${mealItem.mealname}</h5>
+        
         <p class="card-text">${mealItem.cost ? '£' + mealItem.cost : '' }<br> <!--if cost exists, display with £, else display ntohing -->
             ${mealItem.calories ? mealItem.calories + ' cal' : '<br>'}  <!--if calories exists, end with cal, else display ntohing --></p>
 
-        <div class="d-flex justify-content-between">
+        <div class="d-flex gap-1 justify-content-start">
             <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#mealModal" value = " View " onclick="mealModal('${key}')"></input> <!-- send the name/unique key of the meal item selected to the modal fucntion -->
             ${addBtn}
             ${removeBtn}
@@ -366,8 +367,8 @@ if (onCal === true) {
       </div>
     </div>
 
-      <div class="col-5 border rounded-end h-100" data-bs-toggle="modal" data-bs-target="#mealModal" onclick="mealModal('${key}')">
-      ${mealItem.mealimage ? '<img class="img-card border border-1 rounded-end" src="' + mealItem.mealimage + '" >' 
+      <div class="col-5 rounded-end h-100" data-bs-toggle="modal" data-bs-target="#mealModal" onclick="mealModal('${key}')">
+      ${mealItem.mealimage ? '<img class="img-card rounded-end-1" src="' + mealItem.mealimage + '" >' 
     : '<img class="h-75 mt-4 ps-1 img-card rounded-end" src="source/noimage.png">' }
     </div>
 
@@ -400,10 +401,13 @@ async function mealModal(key) {
             <div class="container-fluid">
             <div class="row">
             <div class="col">
-            <p>${mealItem.cost ? '£' + mealItem.cost : ''} </p> <!--if cost exists, display with £, else display ntohing -->
-            <p>${mealItem.calories ? mealItem.calories + ' calories' : ''}  </p> <!--if calories exists, end with calories, else display ntohing -->
+            <div class="d-flex justify-content-between">
+                <p>${mealItem.cost ? '£' + mealItem.cost : ''} </p> <!--if cost exists, display with £, else display ntohing -->
+                <p>${mealItem.calories ? mealItem.calories + ' calories' : ''}  </p> <!--if calories exists, end with calories, else display ntohing -->
+            </div>
             <p class="text-break"style="white-space: pre-wrap; text-wrap: wrap">${mealItem.instructions}</p> <!-- linebreaks included-->
             <p>Category: ${mealItem.category}</p>
+            <p class="truncate">URL:  <a href="${mealItem.URL}">${mealItem.URL}</a> </p>
             
             
             
