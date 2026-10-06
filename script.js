@@ -12,13 +12,15 @@ const paste = document.getElementById('paste');
 const label = document.getElementById('URLlabel');
 
 //sets theme at startup
+
 if (localStorage.getItem('theme') === 'dark') { 
     document.documentElement.setAttribute('data-bs-theme', 'dark');
-    document.getElementById('darkmodebtn').checked = true
-} else {
+    document.getElementById('darkmodetoggle').checked = true
+} else if (localStorage.getItem('theme') === 'light') {
     document.documentElement.setAttribute('data-bs-theme', 'light');
-    document.getElementById('darkmodebtn').checked = false
+    document.getElementById('darkmodetoggle').checked = false
 }
+
 
 function togglePages(page, btn) {
     const pages = document.querySelectorAll('.pageview'); //selects all elements with class 'pageview'
@@ -848,14 +850,14 @@ try {
 
 
 function theme() {
-    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
-        document.documentElement.setAttribute('data-bs-theme','light')
-        localStorage.setItem('theme', 'light');
-    } else {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'light') {
         document.documentElement.setAttribute('data-bs-theme','dark')
         localStorage.setItem('theme', 'dark');
+    } else if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+        document.documentElement.setAttribute('data-bs-theme','light')
+        localStorage.setItem('theme', 'light');
     }
-    
+        
 }
 
 if ('serviceWorker' in navigator) {
