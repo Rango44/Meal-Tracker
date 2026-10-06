@@ -19,6 +19,9 @@ if (localStorage.getItem('theme') === 'dark') {
 } else if (localStorage.getItem('theme') === 'light') {
     document.documentElement.setAttribute('data-bs-theme', 'light');
     document.getElementById('darkmodetoggle').checked = false
+} else {
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+    document.getElementById('darkmodetoggle').checked = true
 }
 
 
